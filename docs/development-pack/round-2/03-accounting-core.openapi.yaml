@@ -295,9 +295,14 @@ paths:
       summary: Post signed-policy-approved journal atomically and idempotently
       description: |
         Unique economic source event key is stored server-side and is not journal draft version.
-        Repeating an identical event returns the original committed journal and audit reference.
-        Changed canonical payload for same event returns 409 EVENT_PAYLOAD_CONFLICT.
-        No posting is enabled until Finance and SoD decisions are signed.
+        Authenticate and recheck company permissions before returning any original result.
+        On exact same-key/same-hash replay, return the original committed journal even if
+        the original draft If-Match value is now stale; never attempt a second post.
+        On first execution or changed payload, enforce draft If-Match and approved source
+        version; changed canonical payload for same event returns 409 EVENT_PAYLOAD_CONFLICT.
+        Hash canonical financial content at its original approved policy version, excluding
+        mutable request key/document-version metadata. No posting is enabled until Finance
+        and SoD decisions are signed.
       parameters:
         - $ref: '#/components/parameters/CompanyId'
         - $ref: '#/components/parameters/JournalId'
