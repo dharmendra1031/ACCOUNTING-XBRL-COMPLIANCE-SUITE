@@ -67,3 +67,7 @@ Reuse approval workflow data across SCR-017 and SCR-033, report filters across S
 Required screenshot and keyboard walkthrough at 1366×768 / 125% / 200% and mobile 320/375; English/Arabic; real validation errors; loading/empty/read-only/posted. Every screen's ticket identifies applicable states, navigation, authorized actions, scroll owner, reusable components, breakpoint behavior and tests.
 
 SRS cases: **TC-091–102** specified only. Do not mark these Implemented or Tested without a working UI and evidence. A static screenshot cannot prove accessible scrolling or large-data responsiveness.
+
+## Canonical screen-state clarification
+
+This is a **compact design-token companion** only. [DEV-02](development-pack/DEV-02-ui-ux-screen-contracts.md) now contains the canonical 38-screen candidate type/scroll-owner map. Generic loading/draft/readonly states in the original SRS do not apply to every screen: login has no SaveDraft, approved/posted history is read-only except permitted reversal, and long accessible forms can scroll when necessary. Exact field schemas, route and wireframes still require approval before UI coding. Do not create a second AppShell, form component set or duplicate approval backend.
