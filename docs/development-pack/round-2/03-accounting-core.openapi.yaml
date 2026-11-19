@@ -294,7 +294,10 @@ paths:
       tags: [Journals]
       summary: Post signed-policy-approved journal atomically and idempotently
       description: |
-        Unique economic source event key is stored server-side and is not journal draft version.
+        Canonical economic event key is stored server-side independent of journal draft version
+        AND delivery SourceSystem. One authorized economic event can have several verified
+        POS/ERP inbound aliases, but only one financial posting. Uncorrelated relays are
+        quarantined, not posted or guessed equal from amount/date.
         Authenticate and recheck company permissions before returning any original result.
         On exact same-key/same-hash replay, return the original committed journal even if
         the original draft If-Match value is now stale; never attempt a second post.
