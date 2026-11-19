@@ -44,7 +44,7 @@
 DBA must verify:
 1. Scoped `TenantId+CompanyId` foreign keys for Company/Branch/Account/Period/JournalLine so a company-A line cannot reference company-B AccountId, including reference inserts via import.
 2. Closed-period and journal-post race in the same SQL transaction/lock order, not independent read/write; a trial balance must never include a post committed after close.
-3. Unique stable source event identity **independent of document version**, conflict payload hash, and separate transport idempotency key.
+3. Unique canonical economic event identity **independent of both document version and delivery SourceSystem**. An approved one-event-one-posting publisher and verified cross-source aliases (POS vs ERP) are necessary; ambiguous relays are quarantined. Separately unique transport delivery IDs and request idempotency keys detect retries; a source-system-scoped financial unique key alone is insufficient.
 4. `Decimal(p,s)` for money/rates/unit costs and KWD three-decimal rounding **at approved booking boundary**; no float; precision/maximum budget signed by Finance.
 5. COA parent cycle check; journal reversal linkage, voucher numbering concurrency and no `ON DELETE CASCADE` on posted financial evidence.
 6. SQL Server Query Store and representative scoped access paths for account/date and journal/date keyset pages before adding redundant indexes.
