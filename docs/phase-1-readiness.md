@@ -2,7 +2,7 @@
 
 Status: **Working development checklist. Not a statement of completed functionality.**
 
-Source of truth: [user-owned reviewed SRS](https://docs.google.com/document/d/1dSqHsbTAVxkspvMRuhlycEJUCVZgCxvEG1hWBSmvuZA/edit), especially §14, §20 and Appendices B–F. The original boss-owned SRS is not edited by this repository.
+Source of truth: [user-owned reviewed SRS](https://docs.google.com/document/d/1dSqHsbTAVxkspvMRuhlycEJUCVZgCxvEG1hWBSmvuZA/edit), especially §14, §20 and working Appendices B–J. The original boss-owned SRS is not edited by this repository.
 
 ## Scope and constraints
 
@@ -47,8 +47,12 @@ These are **work packages**, not assertions that these screens are approved, imp
 
 ## Developer acceptance checklist
 
-For each implementation issue, attach SRS requirement + SCR ID + actual API/database migration (if any) + action permission + tests. Require loading/empty/error/permission denied/RTL states for screens, optimistic version handling for mutation, idempotency on financial events, and server-side data scope. Do not add duplicate modules, speculative menus, dead code or unapproved external integrations. Feature PRs target `development`; `main` is a reviewed release target only.
+For each implementation issue, attach SRS requirement + SCR ID + actual API/database migration (if any) + action permission + tests. Require only applicable loading/empty/error/permission-denied/RTL states per approved screen (login has no SaveDraft), optimistic version handling for mutation, idempotency on financial events, and server-side data scope. Do not add duplicate modules, speculative menus, dead code or unapproved external integrations. Feature PRs target `development`; `main` is a reviewed release target only.
 
 ## Verification environment
 
 .NET SDK 10 is used for the initial API *bootstrap* because it is an actively supported LTS baseline as of November 2026. Exact production SDK/SQL Server versions and hosting image require Engineering/Ops approval before release. SQL Server connection is deliberately absent until tenancy/ERD decisions are approved.
+
+## Canonical cross-document clarification
+
+This short checklist is a **companion** to [DEV-00 master blueprint](development-pack/DEV-00-master-blueprint.md) and [DEV-13 phase/decision gates](development-pack/DEV-13-roadmap-gates.md), not a competing source. The full 38-screen applicability matrix is in DEV-02; source-event uniqueness in DEV-03/04; actual explicit candidate API route resolution in DEV-05. A minimum close/period-lock workflow is Phase 1, even though an advanced close wizard is Phase 2. Decisions remain OPEN until independently approved and tests executed.
