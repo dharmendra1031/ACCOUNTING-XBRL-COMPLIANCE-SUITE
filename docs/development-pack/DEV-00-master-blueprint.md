@@ -35,7 +35,7 @@ Use [PRE-CODE-GAP-REGISTER.md](PRE-CODE-GAP-REGISTER.md) for the 8-layer pre-cod
 
 ## Round 2 architecture handover links
 
-Design proposals have been added to [Round 2 folder](round-2/07-READINESS-GATES-AND-OWNER-SIGNOFF.md): [physical ERD](round-2/01-PHYSICAL-ERD-DESIGN-PROPOSAL.md), [posting state & event](round-2/02-POSTING-STATE-AND-EVENT-CONTRACT.md), [draft OpenAPI YAML](round-2/03-accounting-core.openapi.yaml), [38-screen UX matrix](round-2/04-SCREEN-FIELD-ACTION-AND-UX-CONTRACTS.md), [candidate RBAC](round-2/05-RBAC-AND-APPROVAL-MATRIX.md), [performance protocol](round-2/06-PERFORMANCE-AND-CAPACITY-TEST-DESIGN.md), and [owner sign-off](round-2/07-READINESS-GATES-AND-OWNER-SIGNOFF.md).
+Design proposals have been added to [Round 2 folder](round-2/07-READINESS-GATES-AND-OWNER-SIGNOFF.md): [physical ERD](round-2/01-PHYSICAL-ERD-DESIGN-PROPOSAL.md), [posting state & event](round-2/02-POSTING-STATE-AND-EVENT-CONTRACT.md), [draft OpenAPI YAML](round-2/03-accounting-core.openapi.yaml), [38-screen UX matrix](round-2/04-SCREEN-FIELD-ACTION-AND-UX-CONTRACTS.md), [candidate RBAC](round-2/05-RBAC-AND-APPROVAL-MATRIX.md), [performance protocol](round-2/06-PERFORMANCE-AND-CAPACITY-TEST-DESIGN.md), [owner sign-off](round-2/07-READINESS-GATES-AND-OWNER-SIGNOFF.md), and [38-screen code ownership](round-2/08-FEATURE-CODE-OWNERSHIP-AND-DEPENDENCIES.md).
 
 These are **supplementary execution designs** linked to existing DEV-00–13. They DO NOT increase the number of canonical specification documents, do not mean 38 screens implemented, and do not close 24 critical gaps. The R2 proposals must pass owner reviews and relevant disposable proof before code-ready declaration. `main` and boss-owned SRS stay unchanged.
 
