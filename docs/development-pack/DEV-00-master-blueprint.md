@@ -104,3 +104,7 @@ This cross-document pass read DEV-00–DEV-13 against the complete user-owned wo
 | Phases / decision gating | DEV-13 | Business owner approval record and prerequisite dependencies | OPEN DEC-001–010 |
 
 **Verification note:** 14 Markdown files are present on `development` with no accounting UI/database/ledger implementation. The 38 screens, 58 reports, 102 tests and development specification are **documented scope counts, not completion percentages**. Keep one master source; avoid cloning these contracts into duplicate competing docs.
+
+## Project-wide ID field and numbering contract — SRS Appendix K
+
+For all entity-backed Create/Edit/Detail forms, the first field is the auto-generated numeric `ID`, **read-only**. On a new unsaved form, any displayed `MAX+1` is **estimated and not reserved**; after Save show the exact SQL-generated ID. Do not mistake the entity ID for a legally significant Invoice/Voucher/Receipt serial, which has a separately approved transactional gapless committed issuance ledger. Internal `BIGINT IDENTITY` can skip values after failed writes/restart; it cannot satisfy literal all-PK gaplessness. Keep D-11 OPEN until Product/Finance/DBA signs the distinction and the large-data lock/performance policy. See [DEV-04](DEV-04-database-erd-sql.md), [R2-04](round-2/04-SCREEN-FIELD-ACTION-AND-UX-CONTRACTS.md) and working SRS K-01–K-11.
