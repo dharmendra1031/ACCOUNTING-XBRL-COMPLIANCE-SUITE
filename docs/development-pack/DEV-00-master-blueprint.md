@@ -70,3 +70,23 @@ Use statuses: **Specified → Business Approved → Implemented → Tested → R
 ## Open sign-off register
 
 D-01 frontend and reuse; D-10 organizational/COA/period ownership; DEC-001 edition/customer segment; DEC-002–003 official CMA applicability and form taxonomy; DEC-004 finance recognition; DEC-005 stock costing; DEC-006 FX/precision; DEC-007 native POS/consolidation; DEC-008 hosting/privacy/retention/RPO/RTO; DEC-009 maker-checker thresholds; DEC-010 58 reports/statement mappings; test load/architecture budget and schema migration plan. These require named approving parties and evidence before the corresponding production release.
+
+## Cross-document review corrections — 2026-11-19
+
+This cross-document pass read DEV-00–DEV-13 against the complete user-owned working SRS (Appendix J added). **Source-of-truth order:** signed scope-specific Product/Finance/Compliance/Security decisions and regulator-approved rule packs; current working SRS; this derived technical pack; executable code/tests only for implementation evidence. Where drafts conflict, record a signed change with affected SRS clauses, docs, fixtures, owner and GitHub issue. Newer draft text alone does not override approved finance/regulator policy.
+
+| Release risk | Canonical document | Must be signed/evidenced | Current status |
+| --- | --- | --- | --- |
+| Missing screen ownership (customer/supplier master, orders, expenses, assets, budgets, tenant admin) | DEV-01 + DEV-02 | User journey→workspace/action/permission/test for each | OPEN, do not claim all features have finished UI |
+| Route shorthand / duplicate write endpoints | DEV-05 | Explicit method+full route+DTO+status+authorization per use case | OPEN, design examples only |
+| Event identity, finance posting, currency/valuation | DEV-03 + DEV-04 | Approved Finance fixture + unique event constraint, reconciliation | OPEN DEC-004/005/006 |
+| Cross-tenant records, role/action/amount scope and export | DEV-04 + DEV-06 | Same-tenant FK tests, permission negative tests, revocation | OPEN DEC-009 |
+| External source event/async job recovery | DEV-07 + DEV-12 | Crash/retry proof, durable task record, no double posting | OPEN for implementation |
+| 58 report formulas and as-of reconciliation | DEV-08 | One approved formula/fixture/expected output per report | OPEN DEC-010 |
+| Regulatory applicability, taxonomy and exact package approval | DEV-09 | Official effective rule pack + authorized portal evidence | OPEN DEC-002/003 |
+| 10M/100M performance, p95 and UI scrolling | DEV-02 + DEV-10 | Production-like fixture, approved budget, measured browser/API/SQL | OPEN, unmeasured |
+| 102 test cases | DEV-11 | Executable tests with expected assertions, commit and pass evidence | SPECIFIED, none proven run |
+| CI, production deployment and backup restore | DEV-12 | Release pipeline and signed security/ops gates | PARTIAL CI; production OPEN |
+| Phases / decision gating | DEV-13 | Business owner approval record and prerequisite dependencies | OPEN DEC-001–010 |
+
+**Verification note:** 14 Markdown files are present on `development` with no accounting UI/database/ledger implementation. The 38 screens, 58 reports, 102 tests and development specification are **documented scope counts, not completion percentages**. Keep one master source; avoid cloning these contracts into duplicate competing docs.
