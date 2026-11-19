@@ -137,3 +137,9 @@ Status: OPEN / DESIGN REVIEWED / READY / IMPLEMENTED / TESTED
 This is a **directory ownership proposal**, not a request to create empty folders or a scaffold for each logical SRS entity. The exact physically approved module split and API contracts must reconcile with D-01/10 and DEC-001/004/005/006/009. Avoid fake dead code, duplicated components and massive speculative repository structures. All development stays in `development` only.
 
 **Traceability:** [R2-03 OpenAPI](03-accounting-core.openapi.yaml), [R2-04 screens](04-SCREEN-FIELD-ACTION-AND-UX-CONTRACTS.md), [R2-01 ERD](01-PHYSICAL-ERD-DESIGN-PROPOSAL.md), [GAP register](../PRE-CODE-GAP-REGISTER.md). Existing GitHub issues #4, #7, #8, #9 and #10.
+
+## Universal ID field ownership (SRS K-07–K-11)
+
+All entity-backed Create/Edit/View forms use exactly **one shared read-only `RecordIdField`** as the first field. The frontend binds `nextIdEstimate` only as **NotReserved** on unsaved Create; binds actual SQL `id` only after a successful server commit. Do not create per-module MAX+1 JavaScript counters or send a displayed estimate as the insert primary key. On Edit/View, show persisted numeric ID. Separate Invoice/Voucher/Receipt `BusinessSerialNo` is assigned under its own financial issuance policy, never taken from the generic record ID.
+
+Backend `Infrastructure/Persistence` owns SQL `BIGINT IDENTITY` PK mapping and numeric FK types; each owning feature's create use case returns the persisted ID, not a client-supplied number. A single shared optional permission-scoped read-only estimate query can serve relevant forms if the SQL plan and tenant visibility are approved. High-data-volume performance is prioritized: no table scans or serializing locks just to render an unsaved Create form. D-11 and signed physical ERD gate remain OPEN.
