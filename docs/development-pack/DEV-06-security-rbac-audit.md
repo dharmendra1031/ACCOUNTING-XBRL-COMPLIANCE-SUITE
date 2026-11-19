@@ -57,3 +57,11 @@ RISK-G16 [OPEN SECURITY/OPS]: Owner must approve data residency, retention/legal
 
 ## Security acceptance
 Independent maker-checker and action/amount matrix, no self-privilege escalation, tenant/branch denial, period scope, immutable audited event reference, session revoke/recovery and cached-export denial. Test TC-016,020,029,038,047,054,058,059,060,072,075,077. DEC-008 and DEC-009 still OPEN.
+
+## Cross-document review corrections — 2026-11-19
+
+**Identity choice is OPEN:** Decide approved external OIDC/identity provider versus application-managed local credential store before SCR-001 implementation. If identity is delegated, do NOT duplicate password hashes, recovery tokens or login MFA flows locally; validate issuer, audience, signing keys, expiries and company membership. If local auth is approved, use salted adaptive one-way password hashing and separately protected/rotatable MFA and API secrets.
+
+**Authorization matrix is an executable prerequisite, not a role-name list:** `RoleGrant(Tenant,Company,Branch,Module,Action,Threshold,Validity,PolicyVersion)` is a conceptual contract only. At each sensitive action, enforce exact current grant, period, status and maker-checker separation, with explicit independent approval for privileged grants and break-glass review. A Super Administrator is NOT a silent permission to post customer money or approve CMA submissions.
+
+**Revocation and access:** After company/role/engagement change, invalidate or reauthorize sessions, caches, signed URLs, scheduled export deliveries and pending approvals according to signed policy. A copied URL, delayed job or cached dashboard must never bypass current scope. Audit sensitive access without storing secrets or confidential payloads. Owner must sign DEC-008/009 and runnable tenant/permission tests (TC-020/029/047/054/058/059/060/072/075/077) before customer data flows.
