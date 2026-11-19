@@ -38,3 +38,13 @@ Pending→Validated/NeedsReview→Posted/Failed states; staged schema and contro
 
 ## Tests and blockers
 TC-019,025,035,044,062,074,077,085; source ownership and external API/form authorization OPEN until verified evidence attached.
+
+## Cross-document review corrections — 2026-11-19
+
+**Separate identities:** External delivery attempt ID, inbound payload hash, transport idempotency key, canonical economic event ID and resulting JournalId are separate data. Never manufacture a new economic event ID per retry or per source document revision. The system-of-record for sale, tender, inventory issue and COGS must be recorded *per event type* to prevent overlapping POS/ERP import ledgers.
+
+**Durable job handoff:** If an accepted financial transaction requires later work, commit the job's durable state with the authoritative transaction (or demonstrate equivalent no-loss scheduling); then a bounded async worker can retry independently. This does **not** require a new microservice/queue product. A crash after posting but before an in-memory enqueue must not lose a required downstream task. Job replay must check original event outcome, not repost money.
+
+**Batch state and evidence:** Define `Received → Staged/Validated → Posted` or `NeedsReview/Failed`, with reference counts, totals, source vs accepted/failed quantities, version, original payload hash, principal and authorized scope. Partial imports either post independent valid events with per-event reconciliation per approved batch policy, or fail atomically; NEVER leave an undocumented partially posted batch. A staff `Retry` button cannot bypass company grant or source event unique constraint.
+
+**Export and regulator boundary:** Revalidate audience/recipient company+permission when job executes and artifact is downloaded, not just when scheduled. CMA portal receipt is distinct from accepted regulator decision, and UnknownOutcome prohibits blind resubmission. Exact endpoint/form, credentials and fallback authorization remain OPEN official evidence. See SRS J-04/J-06/J-11; TC-019/035/044/062/074/077/085.
