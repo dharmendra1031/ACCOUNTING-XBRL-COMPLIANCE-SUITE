@@ -113,3 +113,13 @@ A [standalone prototype](prototypes/compact-accounting-workspace.html) demonstra
 D-01 may become **DESIGN REVIEWED** after Product and Engineering actually approve a frontend and inspect real reference assets. D-10 remains **OPEN** until an authorized DBA and Finance owner sign specific ERD/DDL. DEC-004/005/006 and DEC-009 require real owner approvals. Prototype may become **UX REVIEWED** only after user review of measured viewport/RTL/zoom behavior. Capacity remains **UNMEASURED** until load tests on agreed hardware.
 
 Do not mark Round 2 complete or start financial business code because this file exists. Technical reconnaissance and test harness preparation may continue. Update GAP register and GitHub issues with links to signed evidence when available. No redundant new master document set is authorized by this packet.
+
+## H. New universal ID field requirement — D-11 OPEN
+
+Boss requires **numeric automatically assigned IDs** and an **ID as the first read-only field on every entity-backed entry form**, including a visible `MAX(Id)+1`-style next-ID estimate on unsaved Create forms. This has been added to working SRS Appendix K and the UI/ERD/OpenAPI contracts. Three demo workspaces now display estimated read-only numeric IDs in their first field.
+
+**Important distinction:** `MAX(Id)+1` is a non-reserved preview, not a reliable way to insert a row. SQL Server `BIGINT IDENTITY(1,1)` auto-generates actual positive numeric IDs on insert but does not guarantee contiguous values after rollback/failure/restart. Two open forms may both show ID estimate 1002 and ultimately Save as different real IDs. A scoped `MAX(Id)` is also different from a globally allocated identity value in multi-tenant workloads. Never do `INSERT ... VALUES(MAX(Id)+1,...)` for production entries or lock the table for the user's editing session.
+
+For legally/business-visible **Invoice/Voucher/Receipt serials**, preserve gapless *committed allocation ledger* through a separate scope-specific transactional `DocumentNumberSeries` counter and permanent issued/void records. An internal entity ID and business serial are separate numeric fields with different issuance timings.
+
+**Pending D-11 sign-off:** Product decides estimated preview vs persisted draft-on-open, DBA approves ID query/constraint/index/performance, and Finance/Compliance approves which document numbers require strict continuity, void treatment, numbering scope. If truly every technical primary key must be gapless, Product/DBA must explicitly accept serialized per-table transactions and their measured cost; `IDENTITY` alone cannot fulfill it. No DB migration or code has been enabled by these documentation changes.
