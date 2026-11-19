@@ -1,0 +1,880 @@
+openapi: 3.1.0
+info:
+  title: Keifac Accounting Core — proposed API contract
+  version: 0.1.0-draft
+  description: |
+    DESIGN-ONLY OpenAPI for initial scoped company/account/journal flows.
+    These are NOT implemented endpoints. User-owned SRS §14, Appendix F.1/F.2,
+    DEV-05, and Round 2 R2-01/R2-02 control interpretation.
+    Signed D-10, DEC-004/006/009, identity provider, database and finance rules
+    are required before production financial transactions. No CMA or native POS APIs.
+servers:
+  - url: /api/v1
+tags:
+  - name: Context
+  - name: Organization
+  - name: ChartOfAccounts
+  - name: Journals
+  - name: Approvals
+security:
+  - bearerAuth: []
+paths:
+  /session/context:
+    get:
+      operationId: getMyContext
+      tags: [Context]
+      summary: Get verified company/branch/period grants and enabled edition
+      responses:
+        '200':
+          description: Authenticated permission-scoped context
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextResponse'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+  /companies:
+    get:
+      operationId: listMyCompanies
+      tags: [Organization]
+      summary: List only companies visible to current principal
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Scoped, bounded list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyList'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+  /companies/{companyId}:
+    get:
+      operationId: getCompany
+      tags: [Organization]
+      summary: Read the legal-company profile within authorized scope
+      parameters:
+        - $ref: '#/components/parameters/CompanyId'
+      responses:
+        '200':
+          description: Legal-company profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /companies/{companyId}/branches:
+    get:
+      operationId: listBranches
+      tags: [Organization]
+      summary: List only branches in authorized company context
+      parameters:
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Bounded branch page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BranchList'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /companies/{companyId}/fiscal-periods:
+    get:
+      operationId: listFiscalPeriods
+      tags: [Organization]
+      summary: List fiscal periods with lock state; company scope checked server-side
+      parameters:
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Fiscal-period page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeriodList'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /companies/{companyId}/accounts:
+    get:
+      operationId: listAccounts
+      tags: [ChartOfAccounts]
+      summary: List COA for authorized company only, never client-filter the entire ledger
+      parameters:
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+        - name: search
+          in: query
+          schema:
+            type: string
+            maxLength: 100
+      responses:
+        '200':
+          description: Bounded account page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountList'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      operationId: createAccount
+      tags: [ChartOfAccounts]
+      summary: Create authorized account draft or active master under approved policy
+      parameters:
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccount'
+      responses:
+        '201':
+          description: Account created with server-generated ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/InvalidRule'
+  /companies/{companyId}/accounts/{accountId}:
+    patch:
+      operationId: updateAccount
+      tags: [ChartOfAccounts]
+      summary: Update mutable account metadata, never rewrite historical posted account IDs
+      parameters:
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/AccountId'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccount'
+      responses:
+        '200':
+          description: Updated account and new version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/InvalidRule'
+  /companies/{companyId}/journals:
+    get:
+      operationId: listJournals
+      tags: [Journals]
+      summary: Search company-scoped journals with bounded deterministic ordering
+      parameters:
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+        - name: fromPostingDate
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: toPostingDate
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: accountId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/JournalStatus'
+      responses:
+        '200':
+          description: Bounded cursor page, no unbounded OFFSET or SELECT *
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalList'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      operationId: createDraftJournal
+      tags: [Journals]
+      summary: Create journal DRAFT only; does not post money
+      parameters:
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateJournalDraft'
+      responses:
+        '201':
+          description: Persisted draft reference and version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Journal'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/InvalidRule'
+  /companies/{companyId}/journals/{journalId}:
+    get:
+      operationId: getJournal
+      tags: [Journals]
+      summary: Read permitted journal with current lifecycle state and lines
+      parameters:
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/JournalId'
+      responses:
+        '200':
+          description: Journal scoped to company
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Journal'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /companies/{companyId}/journals/{journalId}/submit:
+    post:
+      operationId: submitJournalForApproval
+      tags: [Journals]
+      summary: Submit valid draft for required approval; does NOT post
+      parameters:
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/JournalId'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '200':
+          description: Updated lifecycle; pending approval or authorized flow outcome
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalCommandResult'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/InvalidRule'
+  /companies/{companyId}/journals/{journalId}/post:
+    post:
+      operationId: postApprovedJournal
+      tags: [Journals]
+      summary: Post signed-policy-approved journal atomically and idempotently
+      description: |
+        Unique economic source event key is stored server-side and is not journal draft version.
+        Repeating an identical event returns the original committed journal and audit reference.
+        Changed canonical payload for same event returns 409 EVENT_PAYLOAD_CONFLICT.
+        No posting is enabled until Finance and SoD decisions are signed.
+      parameters:
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/JournalId'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '200':
+          description: Committed original journal reference (new post or exact replay)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalCommandResult'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/InvalidRule'
+  /companies/{companyId}/journals/{journalId}/reverse:
+    post:
+      operationId: createReversalOfPostedJournal
+      tags: [Journals]
+      summary: Post separately authorized linked reversal in open period
+      parameters:
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/JournalId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReverseJournalRequest'
+      responses:
+        '200':
+          description: New reversal JournalId linked to immutable original
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalCommandResult'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/InvalidRule'
+  /companies/{companyId}/approvals:
+    get:
+      operationId: listCompanyApprovals
+      tags: [Approvals]
+      summary: List grants-scoped pending approvals, including journal and filing decision items
+      parameters:
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Scoped, bounded approval queue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApprovalList'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /companies/{companyId}/approvals/{approvalId}/decisions:
+    post:
+      operationId: decideApproval
+      tags: [Approvals]
+      summary: Approve/reject requested action using current SoD and policy version
+      parameters:
+        - $ref: '#/components/parameters/CompanyId'
+        - name: approvalId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalDecisionInput'
+      responses:
+        '200':
+          description: Decision recorded and current next allowed action, NOT an automatic posting
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApprovalDecisionResult'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/InvalidRule'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Provisional only: approved OIDC vs local auth, MFA and session validation not selected.
+        Do not implement or trust company context in token without current server-side grants.
+  parameters:
+    CompanyId:
+      name: companyId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Target company; server MUST verify current membership, not trust path alone.
+    AccountId:
+      name: accountId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    JournalId:
+      name: journalId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    IfMatch:
+      name: If-Match
+      in: header
+      required: true
+      schema:
+        type: string
+        minLength: 1
+      description: Opaque draft version ETag; do not use to identify economic posting event.
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        minLength: 8
+        maxLength: 128
+      description: Transport replay protection; distinct from stable financial SourceEventId.
+    Limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+        default: 50
+    Cursor:
+      name: cursor
+      in: query
+      schema:
+        type: string
+        maxLength: 512
+      description: Opaque signed cursor, deterministic time+ID ordering, company and filter bound.
+  responses:
+    Unauthenticated:
+      description: Authentication required
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Forbidden:
+      description: Company, branch, action or amount denied (non-disclosing 404 optional)
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: Not found within authorized scope
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Conflict:
+      description: Stale version, period locked or conflicting economic event identity
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    InvalidRule:
+      description: Finance/business validation failed; no posting occurred
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  schemas:
+    Problem:
+      type: object
+      required: [type, title, status, code, correlationId]
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        code:
+          type: string
+          examples: [STALE_VERSION, PERIOD_LOCKED, EVENT_PAYLOAD_CONFLICT]
+        correlationId:
+          type: string
+        field:
+          type: [string, 'null']
+        safeAction:
+          type: [string, 'null']
+    ContextResponse:
+      type: object
+      required: [principalId, companies]
+      properties:
+        principalId:
+          type: string
+          format: uuid
+        companies:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyScope'
+    CompanyScope:
+      type: object
+      required: [companyId, actions]
+      properties:
+        companyId:
+          type: string
+          format: uuid
+        branchIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+        actions:
+          type: array
+          items:
+            type: string
+        edition:
+          type: string
+    Company:
+      type: object
+      required: [id, tenantId, legalName, functionalCurrency, version]
+      properties:
+        id:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          format: uuid
+        legalName:
+          type: string
+        functionalCurrency:
+          type: string
+          minLength: 3
+          maxLength: 3
+        status:
+          type: string
+        version:
+          type: string
+    Branch:
+      type: object
+      required: [id, companyId, code, name]
+      properties:
+        id:
+          type: string
+          format: uuid
+        companyId:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+    FiscalPeriod:
+      type: object
+      required: [id, companyId, startDate, endDate, state, version]
+      properties:
+        id:
+          type: string
+          format: uuid
+        companyId:
+          type: string
+          format: uuid
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        state:
+          type: string
+          enum: [Open, Closing, Closed, Reopening]
+        version:
+          type: string
+    Account:
+      type: object
+      required: [id, code, nameEn, accountType, active, version]
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 40
+        nameEn:
+          type: string
+          maxLength: 160
+        nameAr:
+          type: [string, 'null']
+        parentId:
+          type: [string, 'null']
+          format: uuid
+        accountType:
+          type: string
+          enum: [Asset, Liability, Equity, Revenue, Expense]
+        normalSide:
+          type: string
+          enum: [Debit, Credit]
+        active:
+          type: boolean
+        postable:
+          type: boolean
+        version:
+          type: string
+    CreateAccount:
+      type: object
+      required: [code, nameEn, accountType, normalSide]
+      properties:
+        code:
+          type: string
+          maxLength: 40
+        nameEn:
+          type: string
+          maxLength: 160
+        nameAr:
+          type: [string, 'null']
+        parentId:
+          type: [string, 'null']
+          format: uuid
+        accountType:
+          type: string
+          enum: [Asset, Liability, Equity, Revenue, Expense]
+        normalSide:
+          type: string
+          enum: [Debit, Credit]
+        postable:
+          type: boolean
+          default: true
+    UpdateAccount:
+      type: object
+      minProperties: 1
+      properties:
+        nameEn:
+          type: string
+        nameAr:
+          type: string
+        active:
+          type: boolean
+        postable:
+          type: boolean
+        parentId:
+          type: [string, 'null']
+          format: uuid
+    DecimalAmount:
+      type: string
+      pattern: '^(0|[1-9][0-9]*)(\.[0-9]{1,8})?$'
+      description: |
+        Nonnegative decimal encoded as string. Eight fractional digits are a DRAFT
+        transport ceiling, not an authorized currency scale. Finance-defined
+        minor units and precision must be checked on server before posting.
+      examples: ['100.000']
+    JournalStatus:
+      type: string
+      enum: [Draft, PendingApproval, ChangesRequested, Approved, Posted]
+    JournalLineInput:
+      type: object
+      required: [accountId, debit, credit]
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        debit:
+          $ref: '#/components/schemas/DecimalAmount'
+        credit:
+          $ref: '#/components/schemas/DecimalAmount'
+        memo:
+          type: [string, 'null']
+        originalCurrency:
+          type: [string, 'null']
+        originalAmount:
+          $ref: '#/components/schemas/DecimalAmount'
+        fxRate:
+          $ref: '#/components/schemas/DecimalAmount'
+    CreateJournalDraft:
+      type: object
+      required: [postingDate, periodId, lines]
+      properties:
+        postingDate:
+          type: string
+          format: date
+        periodId:
+          type: string
+          format: uuid
+        branchId:
+          type: [string, 'null']
+          format: uuid
+        memo:
+          type: [string, 'null']
+        lines:
+          type: array
+          minItems: 2
+          maxItems: 500
+          items:
+            $ref: '#/components/schemas/JournalLineInput'
+    Journal:
+      type: object
+      required: [id, companyId, postingDate, periodId, status, lines, version]
+      properties:
+        id:
+          type: string
+          format: uuid
+        companyId:
+          type: string
+          format: uuid
+        periodId:
+          type: string
+          format: uuid
+        postingDate:
+          type: string
+          format: date
+        status:
+          $ref: '#/components/schemas/JournalStatus'
+        version:
+          type: string
+        journalNumber:
+          type: [string, 'null']
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/JournalLineInput'
+    JournalCommandResult:
+      type: object
+      required: [journalId, status, version, correlationId, replayed, nextAllowedActions]
+      properties:
+        journalId:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/JournalStatus'
+        version:
+          type: string
+        correlationId:
+          type: string
+        replayed:
+          type: boolean
+        nextAllowedActions:
+          type: array
+          items:
+            type: string
+        reversesJournalId:
+          type: [string, 'null']
+          format: uuid
+    ReverseJournalRequest:
+      type: object
+      required: [reversalPostingDate, reason]
+      properties:
+        reversalPostingDate:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 3
+          maxLength: 500
+    ApprovalDecisionInput:
+      type: object
+      required: [decision, expectedObjectVersion]
+      properties:
+        decision:
+          type: string
+          enum: [Approve, Reject, ChangesRequested]
+        expectedObjectVersion:
+          type: string
+        reason:
+          type: string
+          maxLength: 1000
+    ApprovalDecisionResult:
+      type: object
+      required: [approvalId, decision, correlationId]
+      properties:
+        approvalId:
+          type: string
+          format: uuid
+        decision:
+          type: string
+        correlationId:
+          type: string
+        nextAllowedActions:
+          type: array
+          items:
+            type: string
+    Approval:
+      type: object
+      required: [id, objectType, objectId, objectVersion, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        objectType:
+          type: string
+        objectId:
+          type: string
+          format: uuid
+        objectVersion:
+          type: string
+        status:
+          type: string
+    CompanyList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
+        nextCursor:
+          type: [string, 'null']
+    BranchList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Branch'
+        nextCursor:
+          type: [string, 'null']
+    PeriodList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/FiscalPeriod'
+        nextCursor:
+          type: [string, 'null']
+    AccountList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+        nextCursor:
+          type: [string, 'null']
+    JournalList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Journal'
+        nextCursor:
+          type: [string, 'null']
+    ApprovalList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Approval'
+        nextCursor:
+          type: [string, 'null']
