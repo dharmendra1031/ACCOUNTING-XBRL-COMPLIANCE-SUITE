@@ -73,6 +73,7 @@
               <h2>Account details</h2>
               <form id="coa-form" novalidate>
                 <div class="formgrid">
+                  <div class="field"><label for="account-id">ID — next estimate, not reserved</label><input id="account-id" value="1002" readonly aria-describedby="id-hint-coa" inputmode="numeric"><small id="id-hint-coa">Demo estimate only. Actual ID assigned by SQL on Save.</small></div>
                   <div class="field"><label for="account-code">Account code *</label><input id="account-code" name="code" value="110200" required maxlength="40" autocomplete="off"></div>
                   <div class="field"><label for="account-name">Account name *</label><input id="account-name" name="name" value="Trade receivables" required maxlength="160"></div>
                   <div class="field"><label for="account-type">Account type *</label><select id="account-type" name="type"><option>Asset</option><option>Liability</option><option>Equity</option><option>Revenue</option><option>Expense</option></select></div>
@@ -91,6 +92,7 @@
             <div class="card">
               <h2>Voucher information</h2>
               <div class="formgrid">
+                <div class="field"><label for="journal-id">ID — next estimate, not reserved</label><input id="journal-id" value="5002" readonly aria-describedby="id-hint-journal" inputmode="numeric"><small id="id-hint-journal">Demo estimate only. Not the voucher serial.</small></div>
                 <div class="field"><label for="voucher-date">Posting date *</label><input type="date" id="voucher-date" value="2026-11-19"></div>
                 <div class="field"><label for="voucher-type">Journal type</label><select id="voucher-type"><option>Manual journal</option></select></div>
                 <div class="field"><label for="voucher-number">Voucher number</label><input id="voucher-number" value="Assigned on issue (design proposal)" disabled></div>
@@ -114,6 +116,7 @@
             <div class="card"><h2>Invoice details</h2>
               <form id="invoice-form" novalidate>
                 <div class="formgrid">
+                  <div class="field"><label for="invoice-id">ID — next estimate, not reserved</label><input id="invoice-id" value="3002" readonly aria-describedby="id-hint-invoice" inputmode="numeric"><small id="id-hint-invoice">Demo estimate only. Issued invoice number is separate.</small></div>
                   <div class="field"><label for="customer">Customer *</label><select id="customer"><option value="">Select customer</option><option value="DEMO">Example Customer (fictional)</option></select></div>
                   <div class="field"><label for="invoice-date">Invoice date</label><input type="date" id="invoice-date" value="2026-11-19"></div>
                   <div class="field"><label for="inv-reference">Reference</label><input id="inv-reference" value="DEMO-001"></div>
@@ -127,7 +130,7 @@
             </div>
           </section>
           <div role="status" id="toast" class="status" aria-live="polite"></div>
-          <div class="footer">Prototype preview only · No live authorization · Exact signed fields, formulas and framework remain OPEN · Tested visually only after actual browser review</div>
+          <div class="footer">Prototype preview only · First field is a numeric non-reserved ID estimate · No live authorization · Exact signed fields, formulas and framework remain OPEN · Tested visually only after actual browser review</div>
         </div>
       </main>
     </div>
