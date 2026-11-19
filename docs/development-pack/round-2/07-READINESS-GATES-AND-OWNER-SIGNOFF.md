@@ -32,6 +32,7 @@
 | R2-05 RBAC approvals | Candidate role-action and maker-checker policies | Contract file drafted | PROPOSED; policy and amounts not approved |
 | R2-06 Performance | Benchmark fixture, SQL paths and p95 protocol | Contract file drafted | PROPOSED; no benchmark executed |
 | R2-07 Signoff | Decision register and feature DoR/DoD | This file | OPEN owner approvals |
+| [R2-08 Code ownership](08-FEATURE-CODE-OWNERSHIP-AND-DEPENDENCIES.md) | 38-screen backend module ownership, proposed folder responsibilities and no-duplicate dependency boundaries | 38 owner mappings drafted | PROPOSED, frontend framework and team approval OPEN |
 
 ## 3. Exact Ready gate per feature (before production feature coding)
 
