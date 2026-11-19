@@ -1,0 +1,23 @@
+name: Pull request checks
+
+on:
+  pull_request:
+    branches:
+      - development
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    name: Changes validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pull request
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check patch whitespace
+        run: git diff --check "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}"
