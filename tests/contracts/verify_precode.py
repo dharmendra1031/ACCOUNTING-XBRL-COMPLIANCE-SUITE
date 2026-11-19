@@ -178,7 +178,7 @@ def check_prototype():
         segment = html[start:start + 650]
         require(f'<label for="{input_id}">ID — next estimate, not reserved</label>' in segment,
                 f"{input_id}: first-field estimate label is missing")
-        require(re.search(rf'<input id="{re.escape(input_id)}"[^>]*\\breadonly\\b', segment) is not None,
+        require(re.search(rf'<input id="{re.escape(input_id)}"[^>]*\breadonly\b', segment) is not None,
                 f"{input_id}: must be read-only")
     require("Assigned on issue" in html, "Business voucher number must remain separate")
     print("PASS static UX prototype: unique IDs, 3 workspaces, offline assets, disabled posting")
