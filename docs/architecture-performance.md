@@ -38,3 +38,7 @@ Not performance-ready until target load tests, backups/restore, finance reconcil
 ## Decisions blocking sign-off
 
 Frontend framework/reusable UI, ERD/company boundaries, posting/FX/inventory policy, role/threshold matrix, regulatory filing applicability/approval, hosting/service levels/retention, and approved report formulas remain OPEN. Current repository has a minimal health-check API only; **no business modules or performance harness implemented yet**.
+
+## Canonical durability and capacity clarification
+
+This is a **short architecture companion** to [DEV-10](development-pack/DEV-10-scalability-large-data.md) and [DEV-04 SQL Server](development-pack/DEV-04-database-erd-sql.md). When a committed posting requires downstream processing, persist the job state atomically with the business transaction or prove an equivalent crash-safe handoff. No mandatory distributed messaging framework follows from that requirement. Distinguish server/API p95, browser data-ready p95 and queued report completion; cited 10M/100M test sizes and performance targets are unmeasured. Optimize measured SQL paths and data scope before adding caches/extra services. Actual frontend stack, ERD, load envelope and production infrastructure remain OPEN.
