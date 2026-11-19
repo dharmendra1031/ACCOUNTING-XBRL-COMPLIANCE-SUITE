@@ -55,3 +55,24 @@ Write command input: tenant/company context from verified authorization (never t
 
 ## Endpoint acceptance checklist
 Input/output JSON schema, validation rules, allowed roles/actions and thresholds, tenant/company/branch/period scope, version/If-Match, Idempotency-Key with canonical hash for money events, conflict response, pagination/cursor shape, DB query plan, correlation/audit IDs, error and retry semantics, same-company foreign key enforcement, security negative tests. Long jobs may return 202 with authorized progress. Do not pretend HTTP 200 proves financial posting without committed journal IDs.
+
+## Cross-document review corrections — 2026-11-19
+
+**Critical fix: SRS F.1 endpoint strings are shorthand candidate designs, NOT copy-pastable routes.** No handler implementation is approved until each action has an explicit HTTP verb, full versioned path, DTO, role/action grant, company/branch/period scope and response contract. Specifically, `/post` and `/reverse` do NOT mean API-root endpoints.
+
+| Source shorthand | Explicit candidate normalized route(s), pending API review |
+| --- | --- |
+| SCR-003 `GET/POST/PATCH /companies; /branches` | `GET /api/v1/companies`, `POST /api/v1/companies`, `PATCH /api/v1/companies/{id}`; likewise separately for `/branches` |
+| SCR-004 `GET/POST/PATCH /accounts` | `GET /api/v1/accounts`, `POST /api/v1/accounts`, `PATCH /api/v1/accounts/{id}` |
+| SCR-005 `.../submit; /post; /reverse` | `POST /api/v1/journals/{id}/submit`, `POST /api/v1/journals/{id}/post`, `POST /api/v1/journals/{id}/reverse` |
+| SCR-012 `GET/PUT /mappings` | `GET /api/v1/mappings`, `PUT /api/v1/mappings/{id}`; approve on `POST /api/v1/mappings/{id}/approve` |
+| SCR-013 `GET/PUT /disclosures` | `GET /api/v1/disclosures`, `PUT /api/v1/disclosures/{id}` |
+| SCR-022 `GET/PUT /memberships; /role-grants` | `GET /api/v1/memberships`, `PUT /api/v1/memberships/{id}`, and equivalent `/role-grants` |
+| SCR-029 `GET/POST /items; /warehouses; GET /stock-ledger` | Separate `GET/POST /api/v1/items`, `GET/POST /api/v1/warehouses`, `GET /api/v1/stock-ledger` |
+| SCR-030 `POST /goods-receipts; /stock-transfers; /stock-counts` | Explicit `POST /api/v1/goods-receipts`, `POST /api/v1/stock-transfers`, `POST /api/v1/stock-counts` |
+| SCR-036 `GET/POST /filing-workspaces` | `GET /api/v1/filing-workspaces`, `POST /api/v1/filing-workspaces` |
+| SCR-038 `GET/PUT /report-definitions/{id}` | `GET /api/v1/report-definitions/{id}`, `PUT /api/v1/report-definitions/{id}` |
+
+**Action distinctions:** `Approve` is neither `Post` nor `Export`; an approval route must not allow bypass of maker-checker on a domain-specific route. Shared SCR-017/033 approval service may have multiple filtered views but one authorized decision command. `GET` must never mutate a journal, and every financial `POST` must return the original committed journal reference for a same-payload replay. Protect writes with `If-Match` version and/or stable economic event identity as appropriate. Return 401 unauthenticated, scoped 403 or opaque 404 unauthorized, 409 conflict, 422 domain rule failure and 202 durable queued work where relevant. The original SRS F.1 matrix stays intact as **proposed logical mapping**; these examples are interpretation notes, not a second competing API specification.
+
+**Before a feature is implementation-ready** the developer must replace candidate shorthand in its ticket with exact tested OpenAPI schema, complete route/verb, error/permission fixture and one owning backend use case. See working SRS J-03/J-04.
