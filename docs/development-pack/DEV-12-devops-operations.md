@@ -52,3 +52,11 @@ Use database Query Store, plan regression, waits/locks/deadlocks, CPU/IO/memory/
 
 ## Release checklist
 Signed product/finance/security/compliance decisions, passing reproducible tests, stable GL/TB, approved migrations, backups restored under RPO/RTO, XBRL official evidence if release includes regulator filing, no outstanding critical security issues, deployment/rollback/runbook rehearsal and documented monitoring. Not implemented until evidence exists.
+
+## Cross-document review corrections — 2026-11-19
+
+**CI scope truth:** Current `development` GitHub workflow compiles the minimal .NET API. It does **not** yet run finance integration tests, UI/accessibility tests, SQL migrations, penetration tests, 10M/100M-row tests or deploy production. A green status is only evidence of successful configured checks. The private repository's `main` protection remains unenforced; use manual review/PR discipline until plan/owner permissions permit actual GitHub protections, and never make the repo public automatically.
+
+**Persistence and recovery:** A financial post plus any required downstream durable job record must survive process restart and an exactly-once replay test. Backup/restore must verify monetary source-event identity, GL immutability, attachments, report approval lineage, company isolation and future job recovery. Database change runbooks require dry run at realistic row volume, expected locks, rollback-or-forward repair, checksum/control totals and postdeployment reconciliation. `RPO/RTO`, encryption, residency, retention and incident handling remain owner sign-offs (DEC-008).
+
+**GitHub delivery gate:** PR targeting `development` cites SRS clause, affected DEV files, approved business rule/decision, migration and test evidence. Promotion to `main` requires separately reviewed release PR and completed relevant security/functional/backups gates; a PR is not a stand-in for branch protection. Scope-appropriate automated tests must be introduced once code exists. Never copy production credentials into code, GitHub actions, logs or documentation. See SRS J-02/J-06/J-13.
