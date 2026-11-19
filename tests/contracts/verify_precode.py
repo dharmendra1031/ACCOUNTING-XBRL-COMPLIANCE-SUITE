@@ -125,7 +125,7 @@ def check_catalogue():
             == set(IDs(r"^\| SCR-(\d{3}) ", gap)),
             "Cross-document screen IDs drifted",
         )
-    check_exact_ids(IDs(r"^\| (?:ACC|XBRL)-(\d{3}) \|", gap), 58, "Report catalogue")  # number can repeat across ACC/XBRL
+    check_exact_ids(IDs(r"^\| ((?:ACC|XBRL)-\d{3}) \|", gap), 58, "Report catalogue")
     check_exact_ids(IDs(r"^\- \*\*TC-(\d{3})\*\*", tests), 102, "Test catalogue")
     check_exact_ids(IDs(r"^### GAP-(\d{2}) —", gap), 24, "Open gap detail register")
     print("PASS catalogs: 38 screens mapped across 3 files, 58 reports, 102 TC IDs, 24 open gap categories")
