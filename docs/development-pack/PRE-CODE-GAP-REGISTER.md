@@ -411,6 +411,10 @@ This is a record of design work **still required**, not work claimed to be appro
 
 **No automatic 'APPROVED':** Proposals do not resolve policy/regulator questions, and future Phase 3/4 items cannot block unrelated safe Phase 1 design research. Avoid creating alternate competing ERD/API/UX policies in issues; link to R2 artifacts and record signed changes in canonical SRS and DEV contracts.
 
+## Six-blocker decision-ready evidence (still OPEN)
+
+[Round-2 decision packet](round-2/09-SIX-BLOCKER-DECISION-PACKET.md) separates what Engineering can recommend from what Product/Finance/DBA/Security/Ops must actually sign. It records proposed frontend choice React/TypeScript/Vite for an authenticated workspace (without assigning Product approval), physical ERD verification criteria, posting/FX/inventory numerical signoff fixtures, maker-checker approval thresholds, a static [compact UX prototype](round-2/prototypes/compact-accounting-workspace.html) with synthetic data and disabled posting, and an explicit load-test/hardware evidence protocol. These are **new closure inputs**, NOT closure evidence. Do not change statuses of GAP-02/04/05/08/09/11/12/13/15/23 from OPEN without named approvals and measured execution where applicable.
+
 ## 7. Exit criteria for Round 1 → Round 2
 
 **Round 1 Done =** source coverage inventory captured and a gap register exists. **Round 1 DOES NOT mean gaps closed.** Current register contains 24 prioritized unresolved issue classes and all target screens/reports/test identifiers.
