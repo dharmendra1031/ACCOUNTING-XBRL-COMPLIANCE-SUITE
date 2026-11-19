@@ -437,3 +437,7 @@ This is a record of design work **still required**, not work claimed to be appro
 ## 9. Audit provenance
 
 This register was populated from the user-owned working SRS v1.2 (§3–24, E-SCR-001–038, F.1/F.5 and Appendices G–J), existing DEV-08 report listing and DEV-11 test list. All 38 SRS F.1 rows matched a corresponding E-SCR contract. All 58 report catalog entries and 102 unique tests were present. The original boss-owned SRS has not been modified.
+
+## D-11 identifier UX and gapless-numbering clarification (OPEN)
+
+User requires the first read-only ID field on every entity-backed Create/Edit/Details form, with a numeric `MAX+1`-style preview on New and the confirmed server-generated ID on Save. This is added to working SRS K-07–K-11 and R2-04. **Two separate concerns:** (1) high-throughput internal PK: `BIGINT IDENTITY` permits gaps and unreserved `MAX+1` previews can change; (2) committed accounting Invoice/Voucher/Receipt serial: a separate series-scoped transactional increment, issuance/void audit and never-reuse contract. D-11 Finance/DBA/Product must explicitly decide whether all technical PKs truly must be gapless (high concurrency cost), or whether legally significant committed business serials need continuous auditing. No SQL migration or performance results yet. Recheck 1366×768 form density and concurrent user preview vs confirmed ID.
