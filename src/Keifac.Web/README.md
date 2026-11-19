@@ -1,29 +1,43 @@
 # KEIFAC web UI — development preview
 
-A small, read-only React + TypeScript + Vite + Tailwind foundation.
+Read-only React + TypeScript + Vite + Tailwind frontend foundation.
+This is not an authenticated or connected accounting application; no live
+financial records, database access or Save/Post actions. Do not deploy to customers.
 
-This is NOT an authenticated application and has NO live financial functionality.
-It intentionally shows no demo balances, no Save or Post commands, and no fabricated records.
-The API and SQL schema are not connected. Do not deploy it as a customer application.
-
-## Run locally
+## Local development
 
 Node.js 22.12+ and npm are required.
 
-1. Run `npm install` in this directory.
-2. Run `npm run dev` and open the local Vite URL.
-3. Run `npm run check` and `npm run build` before review.
+1. Run `npm install` in `src/Keifac.Web`.
+2. Run `npm run dev` to preview the UI.
+3. Run `npm run check` and `npm run build` for validation.
 
-Dependencies use exact top-level versions. Commit the resolved npm lockfile after a verified
-install, then switch CI to `npm ci` before merging customer-facing features.
+Direct dependencies are pinned. Commit a verified `package-lock.json` and
+switch CI to `npm ci` before a customer-facing release.
 
-## Scope
+## Source layout
 
-- Three functioning client-side routes: overview, account preview, journal preview.
-- English/Arabic text and RTL direction toggle for these preview screens.
-- Responsive compact shell and empty states; no API calls.
-- Backend remains in `../Keifac.Api`.
+```text
+src/
+├── app/
+│   ├── App.tsx                 # Language state
+│   ├── AppShell.tsx            # Sidebar, toolbar, preview warning
+│   └── routes.tsx              # Route → screen mapping
+├── components/ui/
+│   └── PreviewElements.tsx     # Shared presentational building blocks
+├── features/
+│   ├── overview/OverviewPage.tsx
+│   └── accounting/
+│       ├── accounts/AccountsPage.tsx
+│       └── journals/JournalsPage.tsx
+├── shared/i18n/translations.ts # EN/AR labels
+├── styles/globals.css          # Shared design/layout styles
+└── main.tsx
+```
 
-Use the approved SRS and Phase-1 audit to determine what can be implemented next.
-shadcn/ui components should be added only as each approved interactive screen needs them.
-Do not install a full UI kit or duplicate primitives speculatively.
+Only create new feature folders/components when an approved screen actually
+needs them. The legacy static HTML proof remains under `docs` and is not a
+production frontend. Backend remains in `../Keifac.Api`.
+
+Read `docs/implementation/PHASE-1-IMPLEMENTATION-AUDIT.md` for
+remaining finance/security/UX decisions.
