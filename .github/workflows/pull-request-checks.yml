@@ -1,4 +1,4 @@
-name: Validate backend changes
+name: Validate backend and frontend changes
 
 on:
   push:
@@ -33,6 +33,22 @@ jobs:
       - name: Check pull request patch whitespace
         if: github.event_name == 'pull_request'
         run: git diff --check "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}"
+
+  web-build:
+    name: Frontend preview typecheck and build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/Keifac.Web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned direct dependencies
+        run: npm install --no-audit --no-fund
+      - name: Typecheck and build preview
+        run: npm run build
 
   design-contracts:
     name: Pre-code documentation and OpenAPI structural check

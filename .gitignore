@@ -4,6 +4,11 @@
 .vs/
 *.user
 
+# Frontend dependencies and generated files
+**/node_modules/
+**/dist/
+*.tsbuildinfo
+
 # Local tools and credentials
 .idea/
 .env

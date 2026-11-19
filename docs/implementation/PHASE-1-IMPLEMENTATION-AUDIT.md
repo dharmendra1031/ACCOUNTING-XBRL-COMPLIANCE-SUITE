@@ -1,0 +1,68 @@
+# KEIFAC — Phase-1 implementation audit and execution contract
+
+Date: 19 November 2026. Branch: development. Status: ENGINEERING AUDIT; not Finance, Product, Security, DBA or Compliance sign-off.
+Authority: user-owned working v1.2 SRS (Appendices A–K), derived DEV-00–13 and Round-2 contracts. The boss-owned original SRS and main branch are unchanged.
+
+## 1. Verified baseline (not feature completion)
+
+- Working SRS catalogs 38 screens (SCR-001–038), 28 accounting and 30 XBRL reports, and TC-001–102. Catalogue presence does not mean usable or tested.
+- Repository previously had only an ASP.NET Core 10 /health endpoint, one isolated HTML preview for COA/journal/invoice, draft API/ERD/UI contracts and pre-code consistency checks.
+- No implemented sign-in, tenant authorization, SQL migrations, company activation, chart of accounts, journal posting, invoices, reporting, XBRL, or live regulator access.
+- Existing CI validates backend compilation and documentation structure only; it is not a working accounting acceptance suite.
+- Existing PRE-CODE-GAP-REGISTER tracks GAP-01–24. OPEN means decision/evidence outstanding; not automatically resolved by this audit or code.
+
+## 2. High-priority findings, by dependency
+
+| Priority | Finding | Required closure before customer-facing capability |
+| --- | --- | --- |
+| P0 | D-01/GAP-04 UX route/stack and approved interactive states incomplete | Product + UX/Engineering approve reference screens, routes, accessibility and component ownership |
+| P0 | GAP-07 and DEC-009 identity, scoped authorization, maker-checker incomplete | Choose OIDC/local IdP; sign action/company/branch/threshold rules; negative access tests |
+| P0 | D-10/GAP-02/13 tenant/company/branch/period SQL ownership open | Finance/DBA sign ERD, composite scope constraints, migration, close/post race tests |
+| P0 | DEC-004/005/006 ledger, stock, tax, FX and reversal examples open | Finance signs event trigger, Dr/Cr, exact currency/rounding, retry and cancellation fixtures |
+| P0 | D-11 numeric PK versus gapless business serial decision open | Approve technical BIGINT ID gap semantics and separate transactional business serial scope |
+| P0 | GAP-14 APIs are proposed, not implemented | Versioned routes, request/response/error schemas and concurrency contract accepted |
+| P0 | GAP-21 tests are descriptions, not executable acceptance evidence | Implement exact tenant/finance/API/UI fixtures and run them against code |
+| P1 | GAP-01 master/workflow ownership incomplete | Assign customer/supplier, quote/order/delivery, PO/GRN, expense/asset/budget to approved workspaces |
+| P1 | 58 report titles lack signed numeric formulas and snapshots | Finance report-by-report formula, cutoff, drilldown and reconciliation approval |
+| P1 | CMA/iFSAH taxonomy, form applicability and channel authority unverified | Compliance signs official versioned rule packs and controlled filing workflow |
+| P1 | Performance, deployment, backup, retention, recovery and RTL measurements absent | Real benchmark, restore and browser accessibility evidence |
+
+## 3. Architectural decisions for the development preview
+
+- No new microservices, general event bus, redundant state stores, duplicate posting engines or speculative POS checkout.
+- Single ASP.NET Core modular API; SQL Server remains proposed data store, with no financial migrations before D-10 and D-11.
+- Selected free client direction from user: React + TypeScript + Vite + Tailwind; add shadcn/ui source components, TanStack Table and form libraries only as approved screens need them. Do not bulk-install UI libraries.
+- Initial code is a read-only preview shell, NOT a completed SCR-002/004/005 screen. It has no authentication, no company scope, no API calls and no financial writes.
+- K-07 record ID must be the first readonly field on actual entity create/edit/view forms. Before persistence prefer 'Auto-generated on save' over misleading MAX(Id)+1. Actual numeric IDs and serial numbers are separate.
+- Do not serialize a SQL BIGINT to an unsafe JavaScript Number without an agreed tested JSON encoding/maximum-safe-value policy.
+- A user-facing Arabic toggle must translate content and change direction; browser screen/zoom testing remains pending.
+
+## 4. Phase-1 executable dependency order
+
+| Step | Scope | Done only when |
+| --- | --- | --- |
+| 0 | Frontend preview foundation and code hygiene | Code in development; frontend build, typecheck, responsive/RTL review evidence |
+| 1 | Identity/tenant/company/period approval + foundations | Approved IdP, scoped RBAC and signed SQL model; unauthorized cross-tenant access denied by tests |
+| 2 | Company onboarding and Chart of Accounts | Approved typed APIs/migrations, numeric ID, validation, role, CRUD and denial tests |
+| 3 | Journal drafts, submit/review, posting and reversal | Approved Finance fixtures; atomic balanced posting, lock/idempotency/concurrency and ledger tests |
+| 4 | Customer/supplier masters, sales and purchase document lifecycles | Source-specific recognition, taxes, allocation, invoice serial and matching tests |
+| 5 | Cash/bank, AR/AP settlement and bank reconciliation | Subledger tie-outs, unique transaction handling, cutoff and reversal tests |
+| 6 | Inventory valuation and financial close controls | Approved costing/backdate/returns/GRNI; stock-GL and close checks |
+| 7 | Phase-1 release verification | Zero blocking security/finance defects, approved migration, evidence and restore plan |
+
+Later phases: financial statements and 58 exact reports, generic XBRL, Kuwait CMA adapter, auditor automation, then GCC country extensions. Native POS is not baseline scope without DEC-007.
+
+## 5. Coding guardrails
+
+Use one owning module per behavior, maintain strict separation of UI/API/persistence, keep files focused, use readable naming, no dead code, no fake working buttons or synthetic financial numbers presented as real. Validate input on server, scope all queries by authorized tenant/company/branch, use decimal (not JS floating point) for accounting. No client-side permission check can replace API authorization. No 'working', 'tested' or 'compliant' label without real evidence.
+
+## 6. Immediate proof and blockers
+
+- Frontend preview build check must be wired into CI. A local screenshot is not functional proof.
+- Exact npm dependency versions are selected for the bootstrap. A resolved lockfile is still needed for reproducible npm ci before customer-facing frontend changes.
+- D-01 requires owner/design approval beyond choosing a technology. Treat new code as a reversible design preview while that ticket is open.
+- Identity provider, Finance recognition fixtures, SQL hierarchy and numeric serial design remain unresolved; do not implement financially sensitive persistence as a guess.
+- Verify 1366x768, 1440x900, 320/375, 125/200% zoom, English/Arabic RTL, keyboard and focus; record evidence before DESIGN REVIEWED.
+- Existing pre-code static tests remain separate from frontend code checks and actual acceptance tests.
+
+References: working SRS 1dSqHsbTAVxkspvMRuhlycEJUCVZgCxvEG1hWBSmvuZA, DEV-02, DEV-04, DEV-06, DEV-11, PRE-CODE-GAP-REGISTER, R2-07 and GitHub issues #4, #7, #8, #9, #10.
