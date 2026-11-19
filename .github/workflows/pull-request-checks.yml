@@ -1,6 +1,9 @@
-name: Pull request checks
+name: Validate backend changes
 
 on:
+  push:
+    branches:
+      - development
   pull_request:
     branches:
       - development
@@ -10,14 +13,23 @@ permissions:
   contents: read
 
 jobs:
-  changes:
-    name: Changes validation
+  api-build:
+    name: ASP.NET Core API build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout pull request
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Check patch whitespace
+      - name: Set up supported .NET LTS SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build API (release)
+        run: dotnet build src/Keifac.Api/Keifac.Api.csproj --configuration Release
+
+      - name: Check pull request patch whitespace
+        if: github.event_name == 'pull_request'
         run: git diff --check "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}"
