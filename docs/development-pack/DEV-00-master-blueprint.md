@@ -39,6 +39,10 @@ Design proposals have been added to [Round 2 folder](round-2/07-READINESS-GATES-
 
 These are **supplementary execution designs** linked to existing DEV-00–13. They DO NOT increase the number of canonical specification documents, do not mean 38 screens implemented, and do not close 24 critical gaps. The R2 proposals must pass owner reviews and relevant disposable proof before code-ready declaration. `main` and boss-owned SRS stay unchanged.
 
+## Current six-blocker decision work
+
+The six outstanding Round-2 design blockers have one linked [decision packet](round-2/09-SIX-BLOCKER-DECISION-PACKET.md): frontend option comparison, DBA review checklist, Finance posting/FX choices, action/amount permission matrix, [offline compact UI prototype](round-2/prototypes/compact-accounting-workspace.html), and Level-A/B benchmark acceptance. All remain **PROPOSED/OPEN/UNMEASURED**, not signed or executed. The demo HTML is **not production frontend code**, contains synthetic records only, and does not post money. Until formal decisions and tests exist, keep dependent feature issues blocked.
+
 ## Verified existing code status
 
 - GitHub repository: https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE
