@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Keifac — Compact Accounting UX Pre-Code Prototype (DEMO)</title>
+  <style>
+    :root{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#172536;background:#f4f6f8;
+      --header-height:56px;--nav-width:214px;--field-height:38px;--space:12px;--stroke:#d9e0e7;--primary:#1b4d85;--muted:#61738b}
+    *{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}
+    :focus-visible{outline:3px solid #f3a72b;outline-offset:2px}
+    .demo{display:flex;align-items:center;justify-content:center;gap:9px;padding:7px 12px;background:#fff3d8;border-bottom:1px solid #ead8a0;color:#66450c;font-size:12px;text-align:center}
+    .shell{height:calc(100dvh - 31px);min-height:380px;display:flex;flex-direction:column}
+    .top{height:var(--header-height);flex-shrink:0;display:flex;align-items:center;gap:12px;padding:0 16px;background:#fff;border-bottom:1px solid var(--stroke)}
+    .brand{font-weight:750;font-size:16px;white-space:nowrap}.context{display:flex;align-items:center;gap:8px;min-width:0;margin-inline-start:auto}.top label{font-size:11px;color:var(--muted)}
+    .top select{min-height:34px;border:1px solid var(--stroke);border-radius:6px;background:white;max-width:160px;padding:0 8px}
+    .frame{flex:1;min-height:0;display:flex}.nav{width:var(--nav-width);flex-shrink:0;background:#fff;border-inline-end:1px solid var(--stroke);padding:12px 9px;overflow:auto}
+    .nav button{display:block;width:100%;text-align:start;border:0;background:transparent;border-radius:6px;padding:10px 12px;font-size:13px;color:#40556c}
+    .nav button[aria-current="page"]{background:#eaf1f9;color:var(--primary);font-weight:650}.nav .group{font-size:10px;letter-spacing:.07em;color:#7d8a9c;text-transform:uppercase;padding:8px 12px}
+    .work{flex:1;min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain}
+    .inside{max-width:1460px;margin:auto;padding:14px 17px 22px}
+    .heading{display:flex;align-items:center;gap:10px;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap}
+    h1{margin:0;font-size:18px;font-weight:750;line-height:1.25}h2{font-size:13px;margin:0 0 11px;color:#3d5066}
+    p{margin:5px 0;color:var(--muted);font-size:12px}.toolbar{display:flex;gap:8px;align-items:center}
+    .card{background:white;border:1px solid var(--stroke);border-radius:9px;padding:14px;margin-bottom:10px;box-shadow:0 1px 2px #16202a08}
+    .formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px 14px}
+    .field{display:flex;flex-direction:column;gap:5px;min-width:0}.field>label{font-size:12px;font-weight:600;color:#344962}
+    .field input,.field select{width:100%;min-width:0;height:var(--field-height);padding:6px 10px;border:1px solid #bdc9d8;border-radius:6px;background:#fff;color:#172536}
+    .field input:disabled{background:#edf1f6}.field small{font-size:11px;color:var(--muted)}
+    .error{color:#ad3030;font-size:12px;min-height:0}.field [aria-invalid="true"]{border-color:#b52323}
+    .actions{display:flex;justify-content:flex-end;align-items:center;gap:9px;flex-wrap:wrap;margin-top:12px}
+    .btn{border:1px solid #bac9d7;border-radius:6px;background:white;padding:8px 15px;min-height:37px;font-size:12px;font-weight:650;color:#24405c}
+    .btn.primary{background:var(--primary);border-color:var(--primary);color:white}.btn:disabled{opacity:.46;cursor:not-allowed}
+    .tag{display:inline-flex;align-items:center;padding:3px 8px;border-radius:99px;background:#ebf0f6;color:#52667e;font-size:11px;font-weight:600}
+    .tablebox{max-width:100%;overflow-x:auto;border:1px solid var(--stroke);border-radius:6px}
+    table{border-collapse:collapse;width:100%;min-width:680px;font-size:12px}th{text-align:start;background:#f3f6fa;color:#445870;font-weight:650}
+    td,th{padding:8px 10px;border-bottom:1px solid #e6ebf1}tr:last-child td{border-bottom:0}td input{width:100%;min-width:90px;padding:6px;border:1px solid #bdc9d8;border-radius:5px}
+    td.amount,th.amount{text-align:end;font-variant-numeric:tabular-nums}.summary{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;padding:10px 12px;border-radius:6px;background:#f0f5fa;font-size:13px}
+    .summary strong{font-variant-numeric:tabular-nums}.hint{font-size:12px;color:var(--muted)}
+    .alert{border:1px solid #f0c5c5;color:#963b3b;background:#fff5f5;border-radius:6px;padding:9px;margin:10px 0;font-size:12px}
+    .status{font-weight:700;color:#27593a}.footer{font-size:11px;color:#6b7b8c;padding-top:10px}
+    .screen[hidden]{display:none!important}
+    @media(max-width:790px){.nav{width:60px;padding:9px 5px}.nav button{font-size:0;text-align:center;padding:10px 5px}.nav button::first-letter{font-size:16px}.nav .group{display:none}.top{padding:0 9px;gap:7px}.top label{display:none}.brand{font-size:13px}.top select{max-width:110px}.inside{padding:12px}}
+    @media(max-width:550px){.shell{height:auto;min-height:calc(100dvh - 31px)}.frame{display:block}.nav{width:100%;display:flex;gap:4px;overflow-x:auto;border-inline-end:0;border-bottom:1px solid var(--stroke);padding:6px}.nav button{font-size:12px;white-space:nowrap;width:auto;flex:0 0 auto}.nav button::first-letter{font-size:inherit}.work{overflow:visible}.top{flex-wrap:wrap;height:auto;min-height:56px;padding:9px}.context{flex-wrap:wrap}.formgrid{grid-template-columns:1fr}.card{padding:12px}.heading{align-items:flex-start}.toolbar{width:100%}}
+    @media(max-height:500px){.shell{height:auto;min-height:470px}.work{overflow:visible}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important}}
+    [dir="rtl"] th,[dir="rtl"] .nav button{text-align:right}[dir="rtl"] .amount{text-align:left}
+  </style>
+</head>
+<body>
+  <div class="demo" role="status">DESIGN PROTOTYPE ONLY — synthetic data; not connected to API, database, accounting or live permissions. Financial Post is intentionally disabled.</div>
+  <div class="shell">
+    <header class="top">
+      <span class="brand">KEIFAC <span class="tag">UI concept</span></span>
+      <div class="context">
+        <label for="company">Company</label><select id="company" aria-label="Company context"><option value="a">Demo Trading Co.</option><option value="b">Sample Services LLC</option></select>
+        <label for="period">Period</label><select id="period" aria-label="Accounting period"><option>Nov 2026</option><option>Oct 2026</option></select>
+        <button class="btn" id="lang" aria-label="Toggle layout direction">العربية / RTL</button>
+      </div>
+    </header>
+    <div class="frame">
+      <nav class="nav" aria-label="Accounting screens">
+        <span class="group">Accounting</span>
+        <button type="button" data-screen="coa" aria-current="page">Accounts</button>
+        <button type="button" data-screen="journal">Journal</button>
+        <button type="button" data-screen="invoice">Sales invoice</button>
+      </nav>
+      <main class="work" id="work">
+        <div class="inside">
+          <section class="screen" id="coa">
+            <div class="heading"><div><h1>Chart of Accounts</h1><p>SCR-004 · Compact master form</p></div><span class="tag">Draft master</span></div>
+            <div class="card">
+              <h2>Account details</h2>
+              <form id="coa-form" novalidate>
+                <div class="formgrid">
+                  <div class="field"><label for="account-code">Account code *</label><input id="account-code" name="code" value="110200" required maxlength="40" autocomplete="off"></div>
+                  <div class="field"><label for="account-name">Account name *</label><input id="account-name" name="name" value="Trade receivables" required maxlength="160"></div>
+                  <div class="field"><label for="account-type">Account type *</label><select id="account-type" name="type"><option>Asset</option><option>Liability</option><option>Equity</option><option>Revenue</option><option>Expense</option></select></div>
+                  <div class="field"><label for="parent-account">Parent account</label><select id="parent-account"><option>110000 — Current assets</option><option>100000 — Assets</option></select></div>
+                  <div class="field"><label for="account-ar">Arabic name (optional)</label><input id="account-ar" lang="ar" placeholder="اسم الحساب"></div>
+                  <div class="field"><label for="normal-side">Normal balance</label><select id="normal-side"><option>Debit</option><option>Credit</option></select></div>
+                </div>
+                <div class="error" id="coa-error" role="alert"></div>
+                <div class="actions"><button type="reset" class="btn">Cancel</button><button type="submit" class="btn primary">Save draft</button></div>
+              </form>
+            </div>
+            <div class="card"><h2>Related account list (synthetic)</h2><div class="tablebox"><table><thead><tr><th>Account</th><th>Name</th><th>Type</th><th>Status</th></tr></thead><tbody><tr><td>110000</td><td>Current assets</td><td>Asset</td><td>Active</td></tr><tr><td>110200</td><td>Trade receivables</td><td>Asset</td><td>Draft</td></tr></tbody></table></div></div>
+          </section>
+          <section class="screen" id="journal" hidden>
+            <div class="heading"><div><h1>Journal voucher</h1><p>SCR-005 · Posting is disabled pending Finance approval</p></div><span class="tag">Draft</span></div>
+            <div class="card">
+              <h2>Voucher information</h2>
+              <div class="formgrid">
+                <div class="field"><label for="voucher-date">Posting date *</label><input type="date" id="voucher-date" value="2026-11-19"></div>
+                <div class="field"><label for="voucher-type">Journal type</label><select id="voucher-type"><option>Manual journal</option></select></div>
+                <div class="field"><label for="voucher-number">Voucher number</label><input id="voucher-number" value="Assigned on issue (design proposal)" disabled></div>
+                <div class="field"><label for="voucher-memo">Reference / memo</label><input id="voucher-memo" value="Illustrative two-line entry"></div>
+              </div>
+            </div>
+            <div class="card">
+              <h2>Debit and credit lines (KWD demo only)</h2>
+              <div class="tablebox"><table id="line-table"><thead><tr><th>Account</th><th class="amount">Debit</th><th class="amount">Credit</th></tr></thead><tbody>
+                <tr><td>110200 — Trade receivables</td><td><input class="money debit" aria-label="Row 1 debit" value="100.000" inputmode="decimal"></td><td><input class="money credit" aria-label="Row 1 credit" value="0.000" inputmode="decimal"></td></tr>
+                <tr><td>400100 — Revenue (illustrative)</td><td><input class="money debit" aria-label="Row 2 debit" value="0.000" inputmode="decimal"></td><td><input class="money credit" aria-label="Row 2 credit" value="100.000" inputmode="decimal"></td></tr>
+              </tbody></table></div>
+              <div class="summary" style="margin-top:10px"><span>Debits: <strong id="dr-total">100.000</strong> KWD</span><span>Credits: <strong id="cr-total">100.000</strong> KWD</span><span>Difference: <strong id="difference">0.000</strong> KWD</span></div>
+              <div class="error" id="line-error" role="alert"></div>
+              <div class="actions"><button class="btn" id="draft-save">Save draft (demo)</button><button class="btn" disabled title="No approved permission matrix">Submit for approval</button><button class="btn primary" disabled title="No authorized posting or backend">Post (blocked)</button></div>
+              <p class="footer">Synthetic amounts only; not approved recognition policy. No GL posting or calculation is sent anywhere.</p>
+            </div>
+          </section>
+          <section class="screen" id="invoice" hidden>
+            <div class="heading"><div><h1>Sales invoice</h1><p>SCR-006 · UI-only validation</p></div><span class="tag">Draft</span></div>
+            <div class="card"><h2>Invoice details</h2>
+              <form id="invoice-form" novalidate>
+                <div class="formgrid">
+                  <div class="field"><label for="customer">Customer *</label><select id="customer"><option value="">Select customer</option><option value="DEMO">Example Customer (fictional)</option></select></div>
+                  <div class="field"><label for="invoice-date">Invoice date</label><input type="date" id="invoice-date" value="2026-11-19"></div>
+                  <div class="field"><label for="inv-reference">Reference</label><input id="inv-reference" value="DEMO-001"></div>
+                  <div class="field"><label for="inv-currency">Currency</label><select id="inv-currency"><option>KWD</option></select></div>
+                  <div class="field"><label for="inv-desc">Line item *</label><input id="inv-desc" required value="Example service"></div>
+                  <div class="field"><label for="inv-amount">Amount (KWD) *</label><input id="inv-amount" inputmode="decimal" required value="100.000"></div>
+                </div>
+                <div class="error" id="invoice-error" role="alert"></div>
+                <div class="actions"><button type="reset" class="btn">Cancel</button><button type="submit" class="btn primary">Save draft</button><button type="button" class="btn" disabled title="Recognition policy is not signed">Issue/Recognize (blocked)</button></div>
+              </form>
+            </div>
+          </section>
+          <div role="status" id="toast" class="status" aria-live="polite"></div>
+          <div class="footer">Prototype preview only · No live authorization · Exact signed fields, formulas and framework remain OPEN · Tested visually only after actual browser review</div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const views = [...document.querySelectorAll('.screen')];
+      const navButtons = [...document.querySelectorAll('[data-screen]')];
+      let dirty = false;
+      const work = document.getElementById('work');
+      const toast = document.getElementById('toast');
+      const showToast = msg => {toast.textContent=msg};
+      function guard() {
+        if (!dirty) return true;
+        return window.confirm('Unsaved demo edits exist. Discard and switch context?');
+      }
+      function show(id) {
+        if (!guard()) return;
+        views.forEach(x=>x.hidden=x.id!==id);
+        navButtons.forEach(b=>b.setAttribute('aria-current',b.dataset.screen===id?'page':'false'));
+        dirty=false;showToast('');
+        work.scrollTop=0;
+      }
+      navButtons.forEach(b=>b.addEventListener('click',()=>show(b.dataset.screen)));
+      document.querySelectorAll('.screen input,.screen select').forEach(el=>el.addEventListener('change',()=>{dirty=true;showToast('')}));
+      document.querySelectorAll('.screen input').forEach(el=>el.addEventListener('input',()=>{dirty=true;showToast('')}));
+      const company=document.getElementById('company'), period=document.getElementById('period');
+      for (const sel of [company,period]) {
+        let old=sel.value;
+        sel.addEventListener('change',()=>{const next=sel.value;if(!guard()){sel.value=old;return}old=next;dirty=false;showToast('Context changed for prototype only. No real data loaded.')});
+      }
+      document.getElementById('lang').addEventListener('click',()=>{
+        document.documentElement.dir=document.documentElement.dir==='rtl'?'ltr':'rtl';
+        document.documentElement.lang=document.documentElement.dir==='rtl'?'ar':'en';
+        showToast('Layout direction changed. Full approved Arabic translation is not provided in this prototype.');
+      });
+      const parseFils = raw=>{
+        const s=raw.trim(),m=/^(0|[1-9]\d*)(?:\.(\d{1,3}))?$/.exec(s);
+        return m?BigInt(m[1])*1000n+BigInt((m[2]||'').padEnd(3,'0')):null;
+      };
+      const fmt = v=>{const abs=(v<0n?-v:v);return (v<0n?'-':'')+(abs/1000n).toString()+'.'+(abs%1000n).toString().padStart(3,'0')};
+      const updateTotals=()=>{
+        const arr=(type)=>[...document.querySelectorAll('#line-table .'+type)].map(el=>parseFils(el.value));
+        const deb=arr('debit'),cred=arr('credit'),bad=[...deb,...cred].some(v=>v===null);
+        const d=bad?0n:deb.reduce((a,b)=>a+b,0n),c=bad?0n:cred.reduce((a,b)=>a+b,0n);
+        document.getElementById('dr-total').textContent=bad?'—':fmt(d);
+        document.getElementById('cr-total').textContent=bad?'—':fmt(c);
+        document.getElementById('difference').textContent=bad?'—':fmt(d-c);
+        document.getElementById('line-error').textContent=bad?'Use nonnegative values with up to 3 decimal digits.':d!==c?'Debit and credit do not balance; posting would be blocked.':'';
+        return !bad&&d===c;
+      };
+      document.querySelectorAll('.money').forEach(el=>el.addEventListener('input',updateTotals));
+      document.getElementById('draft-save').addEventListener('click',()=>{if(!updateTotals())return;dirty=false;showToast('Demo draft acknowledged locally — nothing saved to a server.')});
+      const save=(form,error,valid)=>document.getElementById(form).addEventListener('submit',e=>{
+        e.preventDefault();
+        const msg=valid();
+        document.getElementById(error).textContent=msg;
+        if(msg){const field=document.getElementById(form).querySelector('[aria-invalid="true"]');field?.focus();return}
+        dirty=false;showToast('Demo draft acknowledged locally — nothing saved to a server.');
+      });
+      save('coa-form','coa-error',()=>{
+        const x=document.getElementById('account-code'),y=document.getElementById('account-name');
+        x.removeAttribute('aria-invalid');y.removeAttribute('aria-invalid');
+        if(!x.value.trim()){x.setAttribute('aria-invalid','true');return 'Account code is required.'}
+        if(!y.value.trim()){y.setAttribute('aria-invalid','true');return 'Account name is required.'}
+        return '';
+      });
+      save('invoice-form','invoice-error',()=>{
+        const c=document.getElementById('customer'),a=document.getElementById('inv-amount'),d=document.getElementById('inv-desc');
+        [c,a,d].forEach(x=>x.removeAttribute('aria-invalid'));
+        if(!c.value){c.setAttribute('aria-invalid','true');return 'Select a customer.'}
+        if(!d.value.trim()){d.setAttribute('aria-invalid','true');return 'Enter a line item.'}
+        if(parseFils(a.value)===null||parseFils(a.value)===0n){a.setAttribute('aria-invalid','true');return 'Enter a positive KWD amount with up to three decimals.'}
+        return '';
+      });
+      for(const form of ['coa-form','invoice-form'])document.getElementById(form).addEventListener('reset',()=>{dirty=false;showToast('Reset locally (demo only).')});
+      updateTotals();
+    })();
+  </script>
+</body>
+</html>
