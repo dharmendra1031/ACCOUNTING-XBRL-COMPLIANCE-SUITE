@@ -160,3 +160,10 @@ One filing workbench shows provisional diagnostic vs approved frozen candidate; 
 | Changed SRS/DEV links | SRS E/I, DEV-02, GAP-04/05/06/23 |
 | Ticket scope | GitHub #4 and #7 |
 
+## 6. Universal read-only first ID field — SRS K-07–K-11
+
+**This modifies all 38 screen mappings conditionally:** every screen with a persisted, entity-specific Create/Edit/View/Detail form puts the record's numeric `ID` in the **first field** with one reusable `RecordIdField`. New: show an explicit non-reserved estimate, e.g. `1042 (estimated)`, never guaranteed; after Create/Save server confirmation: `1042 (confirmed)` or whatever ID SQL actually assigned. Subsequent Edit/View displays that exact numeric ID read-only. Do not add ID fields to Login, report-only filters, roleless search UI or subordinate lines without their own persisted identity. Do not allow ID to be typed, submitted as a PK, modified or reused.
+
+The preview may be `MAX(Id)+1` only as a tentative advisory value and only with scoped authorization/indexed query proof. Multiple concurrent Create views can show the same preview, and a SQL Server `IDENTITY` can skip values. When no safe estimate is available show `Auto-generated on save`, not a fake certainty. If actual preassigned ID is required, first commit a Draft and show its persisted ID, subject to lifecycle approval.
+
+**Business numbers stay distinct:** Journal/Invoice/Receipt serial allocation is separate and occurs under signed scoped gapless issuance policy; a draft's ID is not its voucher number. Compact layout should fit first ID field in existing form grid without extra cards and unnecessary scrolling; EN/AR, 200% zoom and screen readers must label estimated/confirmed states. Real UI/browser evidence is pending.
