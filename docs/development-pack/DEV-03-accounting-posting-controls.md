@@ -63,3 +63,13 @@ For every PM item: validate balanced functional currency, account eligibility, p
 
 ## Remaining Finance decisions
 D-03 currency rate/rounding, D-04 valuation, D-05 recognition/tax, D-06 maker-checker thresholds, D-10 company COA/periods, DEC-010 report mappings. Each posting rule needs approved fixture, source evidence, accounting date, debit/credit entries, retry, reverse and reconciliation before code enablement.
+
+## Cross-document review corrections — 2026-11-19
+
+**Posting decision table per economic event (not per UI button):** `source event ID` is a stable immutable fact; `document version` is an edit/concurrency revision; `request idempotency key` is transport replay protection. A payment may create a receipt/payment posting once, while subsequent allocation of that already-posted money should change allocations only or post a separately specified advance-clearing event **under signed Finance policy**. Do not post Cash/Bank a second time merely because allocations changed.
+
+**Mandatory fixture for each GLM/PM rule:** source type and immutable event ID; recognition timestamp versus document/posting date; tenant/company/branch/period; transaction, functional and reporting currencies with per-currency precision; debit/credit account and amount; tax applicability and discount allocation; stock cost layer (if any); maker-checker threshold; unique retry outcome; credit/refund and reversal; closed-period adjustment; expected subledger+TB tie-out. An OPEN field prevents that posting event from being enabled.
+
+**Reconciliation invariants:** within the SAME as-of posting cutoff, company, currency conversion and approved mapping, AR/AP control GL equals outstanding subledger; stock value equals inventory control; cash/bank reconciliation includes uncleared items. Approved reports snapshot source balance at a fixed cutoff; reopening or post-cutoff correction cannot mutate that historical snapshot. No automatic reclassification in-place of a posted AccountId.
+
+**Concurrent numbering:** invoice/voucher number allocations must be company/branch/fiscal-series unique under a DB constraint; never recycle a posted/voided number without an approved numbering policy and auditable void reason (TC-064). Avoid client-only sequential counters. This is engineering control, not authorization to select tax or IFRS recognition rules.
