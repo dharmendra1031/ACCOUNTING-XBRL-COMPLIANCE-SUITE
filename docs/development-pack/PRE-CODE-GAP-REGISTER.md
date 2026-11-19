@@ -405,6 +405,7 @@ This is a record of design work **still required**, not work claimed to be appro
 | [R2-05 RBAC](round-2/05-RBAC-AND-APPROVAL-MATRIX.md) | 07,08,24 | Candidate action-role matrix and SoD negative cases | DEC-009 thresholds/delegation and security sign-off |
 | [R2-06 Capacity](round-2/06-PERFORMANCE-AND-CAPACITY-TEST-DESIGN.md) | 15,17,20,23 | 10M/100M fixture spec, query paths and p95 protocol | Cloud and load mix signoff; actual SQL/browser benchmark |
 | [R2-07 Readiness](round-2/07-READINESS-GATES-AND-OWNER-SIGNOFF.md) | 01–24 | Owner/dependency map, feature readiness and sign-off template | Named approvals, evidence and feature-specific design freeze |
+| [R2-08 Code ownership](round-2/08-FEATURE-CODE-OWNERSHIP-AND-DEPENDENCIES.md) | 01,04,09,14 | Single responsible backend module per each of 38 screens, code placement proposals, no duplicate accounting services | D-01 frontend choice, engineering acceptance and actual code review |
 
 **Verification scope:** Read back all 7 files from GitHub; the OpenAPI includes 16 unique operation IDs and no missing local `$ref` definitions by static reference inventory; 38 screen matrix rows read back. These are structural checks, not a full OpenAPI validation or runnable test suite.
 
