@@ -173,3 +173,15 @@ Appendix E's repeated generic `draft/save/stale/empty/read-only` sentence is a *
 | 038 | Report filter panel; panel | Shared filters with SCR-020, not second reporting backend |
 
 **Scroll acceptance:** a short standard master form has no gratuitous vertical page scroll at 1366×768/100%; a long journal/ledger/Arabic disclosure **may** scroll in its one designated content owner. Avoid page+modal+table nested scrolling, but allow zoom 125/200%, 320/375px mobile, keyboard focus, error visibility and long RTL labels. A detailed field/route/conditional-action matrix remains **OPEN** per screen and should not be confused with this navigation inventory. UI implementation is still absent. Relevant SRS J-07/J-08; TC-091–102.
+
+## Numeric ID — first, read-only field on every entity form (SRS K-07–K-11)
+
+**Mandatory presentation:** Create/Edit/Details forms for a record that has an application-owned numeric ID show the **ID as the very first field** in the normal compact form grid, always read-only (not a modifiable input; do not accept user-supplied PK values). Common component: `RecordIdField`. This is mandatory across company, branch, customer, supplier, account, item, invoice, bill, journal and future approved entity workspaces. No new full-height ID card or extra page scrolling.
+
+- **Create before persistence:** `Next ID (estimate)` with a numeric preview such as `1042 (estimated—not reserved)`; it is NOT the assigned ID. Concurrent forms may see the same preview. If a per-tenant estimate is expensive or potentially misleading, show `Auto-generated on save` until a safe optional estimate endpoint exists, with Product sign-off.
+- **After successful Save/Create:** replace the preview with the exact committed numeric ID from the server response. Edit/View shows that same committed number read-only. A reset, abort or failed Save cannot falsely make an estimate permanent.
+- **Business numbering is separate:** Voucher No / Invoice No / Receipt No is an additional field, issued and committed under controlled gapless scoped series where policy requires. It is never implied by the record ID preview.
+- **Exceptions:** Login, search/filter-only forms, wizard pages with no individual persisted entity, subordinate line rows without a separate identity do not invent a first-field ID.
+- **Accessibility and large-data UX:** field label explicitly says Estimated/Not Reserved versus Confirmed; works at 1366×768, EN/AR RTL, mobile and 200% zoom. ID previews must not leak ungranted tenant/company volume or require full-table scans. Decimal numeric IDs must not be rounded by JavaScript.
+
+**Source:** [working SRS Appendix K](https://docs.google.com/document/d/1dSqHsbTAVxkspvMRuhlycEJUCVZgCxvEG1hWBSmvuZA/edit). Signed D-11 universal gapless-PK vs gapless-issued-business-serial decision remains OPEN.
