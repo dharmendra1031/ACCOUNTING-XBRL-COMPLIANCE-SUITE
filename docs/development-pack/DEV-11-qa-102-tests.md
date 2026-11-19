@@ -124,3 +124,13 @@ Below are all 102 canonical test IDs specified across the SRS, including inline 
 
 ## Real implementation status
 The repository has no automated accounting or UX test suite; existing GitHub Actions only builds initial minimal API. Entire TC-001–102 suite is NOT RUN. Production sign-off OPEN.
+
+## Cross-document review corrections — 2026-11-19
+
+**Coverage recheck:** The catalogue includes 102 distinct SRS TC identifiers in sequence. Each entry above is a **test requirement**, not executable test logic. Some IDs describe an expected result only in prose; none should be marked `Passed` until a real versioned fixture, execution transcript, result and reviewer exist. No further new TC IDs are necessary solely to document these clarifications.
+
+**Mandatory test evidence record:** TC ID; SRS clause + screen/workflow; edition and phase; policy version; prerequisite company/branch/period/role; test data and given-state; exact API/UI steps or automated test path; expected GL debit/credit lines or UI/HTTP/regulator artifact as appropriate; negative/retry/concurrency variant; actual DB/assertion/browser evidence; environment and code commit; run date, outcome, defect and owner. Never fabricate expected accounting values before signed policy.
+
+**Reconciliation of test catalogues:** TC-001–018 appear in base §19; TC-019–040 in Appendix B; TC-041–050 are inline inside C-17; TC-051–058 in Appendix D; TC-059–063 in Appendix F.8; TC-064–080 in Appendix G; TC-081–090 in Appendix H; TC-091–102 in Appendix I. Their **tests are specified but not run**, and there is not a 102-test executable suite in the repository.
+
+**Release-level subsets:** Phase-1 security/ledger/GL/subledger cases must pass before posting; reporting formula fixtures per enabled ACC/XBRL report before showing finalized results; XBRL official CMA validation only after verified fixtures; large load tests on dedicated representative staging with approved cost and thresholds. A minimal API compile check is not evidence for any accounting or browser TC. Test owner records waived/not-applicable conditions with release owner approval. See SRS J-02/J-13.
