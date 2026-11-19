@@ -66,3 +66,16 @@ Company and branch scope verified server-side; composite ownership-aware foreign
 
 ## Required design deliverables
 ERD with PK/FK and cascades/NO ACTION; exact DECIMAL(p,s) per field; uniqueness and financial event replay; isolation tests; period locking/write concurrency; migration plan and 100M-row benchmark trace. D-10 and DEC-004/005/006 remain OPEN.
+
+## Cross-document review corrections — 2026-11-19
+
+**Logical candidate keys — require ERD sign-off before migrations:**
+
+- Company `(TenantId,CompanyId)`; Branch `(TenantId,CompanyId,BranchId)`; FiscalPeriod `(TenantId,CompanyId,PeriodId)`; Account `(TenantId,CompanyId,AccountId)`. Child FKs must enforce matching composite ownership keys or an equally proven DB guarantee. No foreign record may become reachable via a guessed ID.
+- JournalHeader→JournalLine, financial source events, approvals and audit use immutable linkage. Avoid `ON DELETE CASCADE` for posted journals, cost layers, filings, receipts or audit trail. Soft inactivation and linked corrections preserve old history.
+- Posting unique key: `(TenantId,CompanyId,SourceSystem,EventType,StableSourceEventId)`, with a canonical payload hash. The document version is **not** part of that uniqueness key. A transport request idempotency key is separately stored/checked, and hash mismatch is 409. A reversal has its own stable source event ID plus `ReversesJournalId`.
+- `RowVersion` or equivalent optimistic concurrency on mutable drafts; `If-Match` expected version checked before command. Posting/period closing must serialize affected business invariants with appropriate SQL transaction isolation and bounded locks, not just a read-then-write in separate transactions.
+- Amounts, quantities, FX rates and taxes use explicitly sized SQL `DECIMAL(p,s)` columns per Finance policy. Document display rounding is not sufficient for ledger precision; exchange-rate gain/loss and KWD 3dp must be backed by fixtures.
+- Reporting at scale: ordered, company-scoped `(PostingDate,JournalId,LineId)` keyset and account/period paths; filter indexes by measured queries with real skew, not blanket indexes. Signed migration proof includes lock-time budget, backfill, row counts, reconciliation and forward recovery/restore test.
+
+**Physical ERD, database migrations and SQL query plan evidence are NOT PRESENT** in this repository today. This list does not silently approve D-10, DEC-004/005/006 or TenantId duplication on every child table where an immutable validated parent chain suffices.
