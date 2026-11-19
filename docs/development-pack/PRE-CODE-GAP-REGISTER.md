@@ -392,6 +392,24 @@ This is a record of design work **still required**, not work claimed to be appro
 | Security | Grant revoked after an export job is scheduled but before download | Recheck permission at execution and delivery, no data leak |
 | Compliance | XBRL candidate changes after signatory approval or portal response times out | Hash mismatch invalidates approval; UnknownOutcome forbids blind retry |
 
+## Round 2 technical design progress — 19 November 2026
+
+**Engineering proposal work has begun, but no GAP is closed by this alone.** The 24 OPEN items remain OPEN until their evidence-to-close and actual authorized sign-offs are attached.
+
+| Design artifact | Covered GAP IDs | What is now written | Still blocking release/code |
+| --- | --- | --- | --- |
+| [R2-01 Physical ERD](round-2/01-PHYSICAL-ERD-DESIGN-PROPOSAL.md) | 02,09,10,12,13,17 | Candidate entity/keys/FKs/period and posting invariants, scoped query index paths | D-10 entity hierarchy, signed physical DDL/p-s, migrations and DBA review |
+| [R2-02 Posting & state](round-2/02-POSTING-STATE-AND-EVENT-CONTRACT.md) | 09,10,11,12,17 | Source event identity, state machine, atomic algorithm, safety examples | DEC-004/005/006/009 and real Finance numeric fixtures |
+| [R2-03 OpenAPI](round-2/03-accounting-core.openapi.yaml) | 07,08,10,14 | 16 full path/verb operations for scoped foundation, 37 referenced schema/parameter/response symbols checked | OIDC decision, signed DTO/error/role details and implementation |
+| [R2-04 Screen fields/UX](round-2/04-SCREEN-FIELD-ACTION-AND-UX-CONTRACTS.md) | 01,03,04,05,06,23 | 38 rows, compact layout and typed high-priority screen proposals | D-01 stack choice, clickable approval wireframes and all exact field definitions |
+| [R2-05 RBAC](round-2/05-RBAC-AND-APPROVAL-MATRIX.md) | 07,08,24 | Candidate action-role matrix and SoD negative cases | DEC-009 thresholds/delegation and security sign-off |
+| [R2-06 Capacity](round-2/06-PERFORMANCE-AND-CAPACITY-TEST-DESIGN.md) | 15,17,20,23 | 10M/100M fixture spec, query paths and p95 protocol | Cloud and load mix signoff; actual SQL/browser benchmark |
+| [R2-07 Readiness](round-2/07-READINESS-GATES-AND-OWNER-SIGNOFF.md) | 01–24 | Owner/dependency map, feature readiness and sign-off template | Named approvals, evidence and feature-specific design freeze |
+
+**Verification scope:** Read back all 7 files from GitHub; the OpenAPI includes 16 unique operation IDs and no missing local `$ref` definitions by static reference inventory; 38 screen matrix rows read back. These are structural checks, not a full OpenAPI validation or runnable test suite.
+
+**No automatic 'APPROVED':** Proposals do not resolve policy/regulator questions, and future Phase 3/4 items cannot block unrelated safe Phase 1 design research. Avoid creating alternate competing ERD/API/UX policies in issues; link to R2 artifacts and record signed changes in canonical SRS and DEV contracts.
+
 ## 7. Exit criteria for Round 1 → Round 2
 
 **Round 1 Done =** source coverage inventory captured and a gap register exists. **Round 1 DOES NOT mean gaps closed.** Current register contains 24 prioritized unresolved issue classes and all target screens/reports/test identifiers.
