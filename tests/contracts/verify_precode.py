@@ -107,6 +107,17 @@ def check_openapi():
                     f"{name}: mutation needs transport replay or concurrency guard",
                 )
     check_exact_ids(operations, 16, "OpenAPI operations")
+    # Application-owned IDs are SQL BIGINT and API numeric int64, never UUID.
+    require("format: uuid" not in content, "Internal API UUID IDs contradict numeric-ID policy")
+    require("format: int64" in content, "Missing numeric int64 ID contract")
+    for param in ("CompanyId", "AccountId", "JournalId"):
+        schema = api["components"]["parameters"][param]["schema"]
+        require(schema.get("type") == "integer" and schema.get("format") == "int64",
+                f"{param} must be a numeric SQL BIGINT/int64 contract")
+    require(api["components"]["schemas"]["IdPreview"]["properties"]["reservationStatus"]["enum"] == ["NotReserved"],
+            "ID preview must be explicitly non-reserved")
+    require(api["components"]["schemas"]["Journal"]["properties"]["journalNumber"]["type"] == ["integer", "null"],
+            "Committed voucher serial must be nullable numeric int64, separate from JournalId")
     require("CanonicalEconomicEventId" in (DEV / "DEV-04-database-erd-sql.md").read_text(encoding="utf-8"), "Canonical financial key missing from DEV-04")
     print(f"PASS OpenAPI: {len(operations)} unique operations, local references, path parameters, guarded mutations")
 
@@ -157,6 +168,19 @@ def check_prototype():
     require('Post (blocked)' in html and 'disabled title="No authorized posting or backend"' in html, "Financial Post must remain disabled")
     require('document.documentElement.dir' in html, "RTL direction preview missing")
     require('DESIGN PROTOTYPE ONLY' in html, "Missing demo/non-production warning")
+    # Each entity-backed demo has the first field as a read-only estimated numeric ID.
+    for input_id, preceding in (
+        ("account-id", '<form id="coa-form" novalidate>'),
+        ("journal-id", '<h2>Voucher information</h2>'),
+        ("invoice-id", '<form id="invoice-form" novalidate>'),
+    ):
+        start = html.index(preceding)
+        segment = html[start:start + 650]
+        require(f'<label for="{input_id}">ID — next estimate, not reserved</label>' in segment,
+                f"{input_id}: first-field estimate label is missing")
+        require(re.search(rf'<input id="{re.escape(input_id)}"[^>]*\\breadonly\\b', segment) is not None,
+                f"{input_id}: must be read-only")
+    require("Assigned on issue" in html, "Business voucher number must remain separate")
     print("PASS static UX prototype: unique IDs, 3 workspaces, offline assets, disabled posting")
     print("NOT TESTED: browser layout at 1366x768, Arabic translations, keyboard, 200% zoom")
 
