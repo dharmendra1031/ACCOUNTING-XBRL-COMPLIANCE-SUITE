@@ -84,3 +84,9 @@ Current status: OPEN / BUSINESS APPROVED / DESIGN REVIEWED
 **Never auto-fill an approval, policy choice or regulator certification from an AI recommendation.**
 
 **Related:** [Master Gap Register](../PRE-CODE-GAP-REGISTER.md), [DEV-13](../DEV-13-roadmap-gates.md), GitHub Issues #1, #3, #4, #7, #8, #9, #10.
+
+## New ID and numbering decision — D-11
+
+**User requirement:** every entity-backed Create/Edit/Details form must display a read-only numeric `ID` as FIRST field, with an estimated next ID when new, confirmed SQL-generated ID after Save. **Architectural correction:** `MAX(Id)+1` is not reserved nor guaranteed; do not insert using it. `BIGINT IDENTITY` guarantees neither gapless technical keys nor exact preview agreement after rollback/concurrent users/restart. Business-visible Invoice/Voucher/Receipt serials need a separate signed scoped transactional counter and permanent allocation/void ledger to preserve committed sequence continuity.
+
+**Approvals required:** Product chooses estimated-not-reserved preview vs a pre-created committed Draft; DBA confirms numeric PKs/ingest ID, efficient scoped preview, SQL serialization and performance; Finance/Compliance decides serial scope (company, document type, year, branch), issuance timing, cancellation and gapless register semantics. If *all internal PKs* must be gapless, explicitly sign a serializing counter/performance trade-off before coding (not approved as default). See [R2 Physical ERD](01-PHYSICAL-ERD-DESIGN-PROPOSAL.md) and SRS K-01–K-11. **Status: PROPOSED/OPEN**, not migrated or tested.
