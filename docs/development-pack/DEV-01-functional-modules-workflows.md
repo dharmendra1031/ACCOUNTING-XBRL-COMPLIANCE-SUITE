@@ -121,3 +121,19 @@ Record regulator receipt, status and rejection reasons; create a new version for
 
 ## Blockers
 DEC-001 business edition, DEC-004 recognition, DEC-005 stock costing, DEC-006 FX, DEC-007 POS and consolidation scope, DEC-009 approval, D-10 company structure. All OPEN until business owner signs. Do not label workflows implemented based on specification.
+
+## Cross-document review corrections — 2026-11-19
+
+**Ownership coverage gaps fixed as explicit prerequisites, not invented pages.** The existing 38-screen list is the only approved-for-review screen inventory. The following functional requirements must receive a **screen/workspace allocation decision** before a feature ticket is Ready. Candidate ownership is for discussion only.
+
+| Functional flow not fully contracted | Candidate existing workspace | Missing business and UX approval |
+| --- | --- | --- |
+| Customer/supplier master, duplicate detection, deactivation and merge | Sales SCR-006/026; Purchase SCR-007/028 | Reusable master editor, party bank access, credit and audit |
+| Quote→order→delivery→invoice→credit/return | Sales SCR-006 plus ledger SCR-024 | Separate document statuses and exact revenue/stock recognition triggers |
+| Purchase request→PO→goods receipt→bill/return | SCR-007 and SCR-030 | Request/PO ownership, GRNI and matching tolerance |
+| Expenses, claims and fixed-asset register/depreciation | Accounting workspace and SCR-005/024 | Explicit dedicated contract/ID if separate UI needed; signed event posting |
+| Budgets, cost centres, projects and variance alerts | SCR-020/038 + approved admin workspace | Budget edit/approve does not silently create journal posting |
+| Tenant subscription, global provisioning and support | Administration workspace, SCR-022/035 | Separate privileged tenant administrator grants and audit |
+| Period close/lock baseline | SCR-023/032 | Minimal Phase-1 close gate; advanced close wizard Phase 2 |
+
+Every journey must enumerate **Draft → Submitted/Approved (if needed) → Recognized/Posted → Settled/Closed** as **distinct** states where applicable; not every action journals money. If no existing screen can satisfy an approved journey, request a new screen ID/change-control record; do not quietly expand the 38-screen inventory. This review is technical clarification, **not Product or Finance approval**. See SRS J-07/J-08.
