@@ -28,9 +28,10 @@ Interpretation: a `Reversed` view is derived from linked immutable reversal post
 | Identifier | Meaning | Uniqueness and impact |
 | --- | --- | --- |
 | TenantId, CompanyId | financial ownership | Verified from authenticated membership; not trusted from body |
-| SourceSystem | POS / manual GL / ERP / Sales, etc | Approved owner per event type |
+| SourceSystem / IntegrationId | Sender/delivery channel (POS, ERP relay, manual GL) | Audited and inbound deduplicated; differing SourceSystem values may not create a second financial posting of the same canonical economic event |
 | EventType | e.g. InvoiceRecognized, ReceiptPosted, StockIssued | Recognition event names require Finance signoff |
-| StableEventId | immutable ID generated at occurrence | Identity survives document editing, retries and delivery |
+| CanonicalEconomicEventId (called StableEventId in older drafts) | Immutable, verified event identity assigned by approved posting owner | Unique in tenant/company/event-type scope, survives edits and POS/ERP relay; never guessed by matching amount/date |
+| ExternalMessageId / InboundDeliveryId | Delivery-specific source message | Source/transport-unique record mapped to verified canonical event, otherwise Quarantined |
 | PayloadHash | canonical approved event body checksum | Same key/new hash causes conflict, not new posting |
 | DocumentVersion | optimistic edit revision | Never part of posting uniqueness boundary |
 | RequestIdempotencyKey | HTTP retry coalescing | Scoped and expiring per signed operations policy, distinct from StableEventId |
@@ -42,7 +43,7 @@ Interpretation: a `Reversed` view is derived from linked immutable reversal post
 1. Authenticate; resolve tenant/company and current grants from authoritative storage; evaluate action, amount, SoD, and period.
 2. In a bounded SQL transaction, lock/select affected fiscal period and source event key in a consistent order, validate company-scoped account eligibility and current approval/source hash.
 3. Canonicalize and validate event payload, currency conversion precision and invariant of balanced functional debits/credits. Do not use an unapproved tax, valuation or FX policy.
-4. Insert or resolve unique stable source-event posting key. On exact same-key/same-hash already Posted, return original journal reference (and HTTP semantics per contract). On key/hash mismatch, reject with 409 `EVENT_PAYLOAD_CONFLICT`; on transient uniqueness race, reload committed original. **Replay ordering:** after authenticating and enforcing current permission to access the original company/action outcome, an exact replay may return the already-committed reference despite an obsolete draft `If-Match`; do not re-run posting, approve again, or recalculate under a newer policy. A changed payload must not evade the stale-version or hash conflict check.
+4. Resolve or quarantine any inbound delivery against a verified canonical economic event; never mint another financial event per POS/ERP relay. Insert or resolve unique `(TenantId,CompanyId,EventType,CanonicalEconomicEventId)` posting key, with SourceSystem recorded separately. On exact same-key/same-hash already Posted, return original journal reference (and HTTP semantics per contract). On key/hash mismatch, reject with 409 `EVENT_PAYLOAD_CONFLICT`; on transient uniqueness race, reload committed original. **Replay ordering:** after authenticating and enforcing current permission to access the original company/action outcome, an exact replay may return the already-committed reference despite an obsolete draft `If-Match`; do not re-run posting, approve again, or recalculate under a newer policy. A changed payload must not evade the stale-version or hash conflict check.
 5. For the first valid event, insert JournalHeader and JournalLines, source-state and immutable audit record; persist any required durable job in the same transaction (or equivalent proven atomic handoff), then commit.
 6. Return committed JournalId, source event identity, version/correlation and allowed actions. An HTTP timeout does not mean posting failed; server-side retries must be safe.
 7. Reversal is a new approved event, current period must be open, link to original and disallow double reverse/correction under signed policy.
@@ -58,7 +59,8 @@ Interpretation: a `Reversed` view is derived from linked immutable reversal post
 | Same event sent 100 times | stable key `manual-001`, identical canonical hash | Exactly one journal and identical committed reference; no retries alter debit/credit | Engineering invariant |
 | Same event changed payload | stable key `manual-001`, a different hash | HTTP 409; no second journal, request authorized correction | Engineering invariant |
 | Receipt partially allocated | Invoice 100.000 KWD; posted receipt 40.000 KWD, no other credits | Outstanding 60.000; allocation never re-debits bank | Proposed math example; final recognition policy OPEN |
-| Stock sold + POS replay | Same approved sale/stock issue event delivered by POS and ERP | One designated COGS publisher and stock valuation applied once | Source owner/costing DEC-005 OPEN |
+| Stock sold + POS/ERP relay | Same sale/stock issue delivered twice with verified shared canonical economic ID | Exactly one authoritative COGS publisher and one journal, even if transport SourceSystem differs | Source owner/costing DEC-005 OPEN |
+| Ambiguous import alias | Two transport messages resemble one sale, but no trustworthy common economic identity | Quarantine for authorized reconciliation; never guess from amount, customer or date and never silently post both | Canonical source mapping OPEN |
 | Period close race | Two users post/close same company period concurrently | Either authorized post completes before close or post fails; never committed into already-closed state | SQL locking design pending |
 | Historical reversal | Closed original period, authorized reversal current open period | Original remains unchanged; separate dated reversal with reference | Authorized reversal rules OPEN |
 
