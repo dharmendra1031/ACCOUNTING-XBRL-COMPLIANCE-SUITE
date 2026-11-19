@@ -72,3 +72,23 @@ Issues #1–#6: SRS/code audit, branch/CI protection, finance/regulatory decisio
 
 ## Every ticket's definition of ready / done
 Ready requires linked SRS requirement, edition/phase, approved business decision, user journey and screen contract, API/schema proposal, permission and FX/rounding policy, expected fixture and acceptance checks. Done requires implementation at verified commit, code review, unit/API/browser/security tests as relevant, migration/rollback evidence, finance reconciliation, performance proof and release gate. If OPEN blockers exist, keep ticket Specified/Blocked rather than calling it Completed.
+
+## Cross-document review corrections — 2026-11-19
+
+**Prerequisite map, not a promise that all 38 screens ship in Phase 1:**
+
+| Implementation area | May proceed with technical scaffolding | Must be signed before live functionality |
+| --- | --- | --- |
+| API/bootstrap/CI/docs | Basic compilation, safe logging and health | No customer data or claim of working accounting |
+| Screen AppShell and accessible shared fields | Wireframes and reusable components if frontend is approved | D-01 and screen×edition×role×phase, per-screen validation/state |
+| Tenant/company/branch/period & DB migration | Candidate ERD, constraints, transaction tests | D-10, action/grant matrix, migrations and tenant isolation |
+| Journals/AR/AP and source event posting | Pure engine tests and expected interface | DEC-004, DEC-006 if multicurrency, DEC-009, signed GL fixtures |
+| Inventory valuation | Master screens and test scaffolding | DEC-005 cost layers/returns/negative/backdate policy |
+| Financial statements, 58 reports | Generic filters/read-model scaffold | DEC-010 per-report formula/expected numeric fixtures |
+| XBRL draft, taxonomy parse | Generic standards fixtures, diagnostic watermark | Official forms/taxonomy, legal applicability and exact package approval before CMA filing-ready |
+| Native POS and consolidation | Read existing reference UI and define optional scope | DEC-007; do not silently add modules |
+| Production deployment and large-data guarantees | Staging harness planning | DEC-008, performance hardware/workload budget, restore proof and security review |
+
+**Decision log row must include:** `DEC/D ID | scope | current OPEN status | accountable role/person | alternatives | approved choice and rationale | version/effective date | affected SRS/screens/APIs/DB | expected tests | evidence link | approval timestamp | release gate`. Blank owner/evidence means the decision remains OPEN. Open blockers prevent only **dependent live functionality**; they do not block harmless docs, test harnesses and safe technical bootstrapping.
+
+**Master change rule:** A signed business change updates the user-owned working SRS, every affected DEV contract, the exact GitHub issue and fixture expected results before merging implementation. All documentation is derivation, not a second competing authority. New technical or regulator facts require primary evidence; avoid declaring DEC-001–010 resolved from a developer assumption. See SRS Appendix J.
