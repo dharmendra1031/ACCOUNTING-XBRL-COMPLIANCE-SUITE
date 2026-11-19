@@ -57,6 +57,202 @@ Never start a feature simply because a feature name, candidate endpoint or scree
 | GAP-23 | P1 | Compact scroll & RTL proof | UX | Appendix I, TC-091–102; DEV-02 | #4, #7 | OPEN |
 | GAP-24 | P1 | Data lifecycle and access revocation | Security + Ops | DEC-008/009, J-09/13; DEV-06/12 | #3, #9 | OPEN |
 
+## 2A. Detailed closure criteria for each OPEN gap
+
+This is a record of design work **still required**, not work claimed to be approved or implemented. Sign-off must identify owner, date, approved version and linked code/test evidence.
+
+### GAP-01 — Cross-module workflow ownership
+
+**Missing/ambiguous:** Map quotation/order/delivery, purchase request/PO/GRN, customer/supplier masters, expenses, assets, budget, and tenant subscription to actual reusable workspaces and single business event owners. No new screen assumed by default.
+
+**Required to close:** Signed flow diagram with source → screen/action → canonical API → permission → test and no-duplicate disposition.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-02 — Entity/branch/period isolation
+
+**Missing/ambiguous:** Approve legal company vs branch ownership of COA, period, shared masters and intercompany transfers. Multi-company switching is not consolidated reporting.
+
+**Required to close:** Signed D-10 decision, composite FK diagram, cross-tenant/branch denial and period-lock fixture.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-03 — Product edition/phase entitlements
+
+**Missing/ambiguous:** A screen in SCR-001–038 does not mean it appears in the first customer edition; standalone XBRL needs permitted external input.
+
+**Required to close:** Approved screen×edition×role×release matrix and externally approved statement intake contract.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-04 — Frontend stack and reusable design
+
+**Missing/ambiguous:** Choose the actually available frontend framework/library and component reuse; no invention of Ibdaa reference assets or unrelated POS checkout.
+
+**Required to close:** Approved route tree, AppShell/component ownership, clickable prototype and explicit framework rationale.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-05 — Complete per-screen field/state contract
+
+**Missing/ambiguous:** Generic screens lack exact conditional required fields, default values, validation/error focus, mutation permissions and legal transitions.
+
+**Required to close:** One screen workbook per enabled SCR ID or N/A reason, approved form schema, transition graph and scroll ownership.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-06 — Navigation and mid-flow recovery
+
+**Missing/ambiguous:** Stale company/period results, unsaved work, denied deep links and errors must be handled consistently.
+
+**Required to close:** Recorded state diagram for company switch, route guard, save/discard, stale fetch cancellation and recovery.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-07 — Identity provider and sessions
+
+**Missing/ambiguous:** OIDC delegated identity vs local password/MFA determines User data, recovery, session revocation and token threat model.
+
+**Required to close:** Explicit security decision, provider settings/claims contract or local adaptive-hash/MFA design, unauthorized-access tests.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-08 — RBAC and maker-checker
+
+**Missing/ambiguous:** Role names alone are not module/action/amount/branch grants; self-approval and revoked approver access must fail.
+
+**Required to close:** Signed complete action/threshold matrix with delegation policy, negative fixture and audited policy version.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-09 — Accounting recognition/policy fixtures
+
+**Missing/ambiguous:** Draft, issued, approved, recognized, paid, delivered, returned and reversed are distinct; illustrative GLM mappings are not Finance approval.
+
+**Required to close:** Each enabled event has approved Dr/Cr rows, source trigger, tax/FX/costing, cancellation and retry examples.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-10 — Concurrency and allocation safety
+
+**Missing/ambiguous:** Unique voucher numbers, open-item allocation caps, double submit, payment advance application and period close race need transactional rules.
+
+**Required to close:** Specific SQL uniqueness/isolation decisions and multi-session tests with numeric journal and outstanding outputs.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-11 — Inventory valuation/backdating
+
+**Missing/ambiguous:** FIFO/weighted average, negative stock, backdated receipts, returns and landed costs affect both stock and GL.
+
+**Required to close:** Approved cost-layer calculation fixtures and branch transfer/return/backdate rollback scenarios.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-12 — Currency, FX and tax precision
+
+**Missing/ambiguous:** KWD monetary precision does not imply all currencies share 3 decimals; source rate/date, rate scale and tax applicability need policy.
+
+**Required to close:** Per-currency/FX/tax precision matrix with rounding allocation, gain/loss, examples and approver.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-13 — Physical SQL design
+
+**Missing/ambiguous:** Logical entities are insufficient for migrations and scale, especially tenant composite keys, immutable journals and period-lock transactions.
+
+**Required to close:** Approved ERD, DDL, constraints, cascade behavior, migration/restore strategy and scoped query plans.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-14 — Exact API schemas
+
+**Missing/ambiguous:** SRS F.1 includes shorthand paths, missing DTO and response examples, and potentially duplicated approvals endpoints.
+
+**Required to close:** OpenAPI per use case: exact verb/full route, DTO, error/409/422, If-Match, permission, pagination and idempotency.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-15 — Capacity and performance proof
+
+**Missing/ambiguous:** Proposed 10M/100M rows and p95 numbers are unmeasured; requests-per-second, tenant skew and infra budget unspecified.
+
+**Required to close:** Signed load mix/platform/cost and query budgets, cold/hot plans, p95/p99, CPU/locks/IO, large-tenant tests.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-16 — 58 exact report contracts
+
+**Missing/ambiguous:** Title and description cannot produce compliant numeric output, especially cash flow/equity ratios and taxonomy mapping.
+
+**Required to close:** For each enabled ID: mapping/formula/source/filter/FX/period, expected numeric fixture, reconciliation and approval.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-17 — As-of reporting and close snapshots
+
+**Missing/ambiguous:** Approval state, future corrections and period reopen must not retroactively mutate filed or reviewed historical totals.
+
+**Required to close:** Fixed cutoff, version/hash lineage, AR/AP/stock/bank tie-outs, invalidation/reapproval test and user-facing freshness.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-18 — Official Kuwait filing applicability
+
+**Missing/ambiguous:** CMA jurisdiction, legal segments, current taxonomy, regulator portal artifacts and actual API permission cannot be inferred.
+
+**Required to close:** Compliance-signed official sources, effective dates, forms, channel permissions and acceptance fixtures.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-19 — XBRL standalone & exact artifact approval
+
+**Missing/ambiguous:** Standalone edition requires external approved TB source; package finalization must retain approved bytes, not regenerate after approval.
+
+**Required to close:** Approved import/cutoff contract, candidate/input hash review, versioning, regulator UnknownOutcome/retry tests.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-20 — Integration ownership & durable job handoff
+
+**Missing/ambiguous:** POS/ERP events may overlap; crash after money commit but before in-memory job enqueue can lose recovery tasks.
+
+**Required to close:** Per-event publisher map, stable IDs/payload hashes, persisted job state, replay, partial batch and restart proof.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-21 — 102 runnable tests and sample data
+
+**Missing/ambiguous:** 102 test descriptions exist, but not all exact fixtures, preconditions or automated runs are defined.
+
+**Required to close:** For each enabled TC: expected HTTP/DB/UI/ledger values, synthetic dataset, executable path, commit and evidence.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-22 — Release engineering and recovery
+
+**Missing/ambiguous:** Private main is unprotected; CI compiles health check only; data residency, backup, retention and restore are not approved.
+
+**Required to close:** Signed operational region/RPO/RTO, secure CI/test/deploy gates, proven backup restore and reviewed release process.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-23 — Compact RTL and accessible scrolling
+
+**Missing/ambiguous:** A short-form zero-scroll target must not clip errors, actions, 200% zoom labels or mobile financial columns.
+
+**Required to close:** Approved representative screen captures and keyboard/RTL/mobile scroll behavior at 1366×768, 320px and 200%.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
+### GAP-24 — Data rights and revocation
+
+**Missing/ambiguous:** Audit trails, scheduled exports, attachments, role changes and auditor engagement access need lifecycle policy.
+
+**Required to close:** Retention/consent/offboarding/expiry plan and revoked-role/job/file URL negative-test evidence.
+
+**Status:** OPEN. No owner approval or executable test evidence attached.
+
 ## 3. Screen → logical module/API/data/permission/test/performance matrix (38 IDs)
 
 **Important:** Paths and entity names below are copied as **candidate mappings** from SRS F.1. A path fragment like `/post` is NOT a full implementable route. Fields, state transitions and scroll ownership come from [DEV-02](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-02-ui-ux-screen-contracts.md) and remain subject to UX approval. Phase assignments use SRS F.5; `P1(min)/P2(full)` describes only differing depth, not a duplicate UI.
