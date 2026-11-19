@@ -1,0 +1,72 @@
+# KEIFAC DEV-00 — Master Development Blueprint & Documentation Index
+
+## Purpose and version
+
+The authoritative developer handover pack for Keifac Accounting & XBRL Compliance Suite, Kuwait-first and GCC-ready; updated 19 November 2026.
+
+**Owner:** user account (dharmendra1031) GitHub repository; all changes to documents and application code happen on `development`. `main` is the stable release branch. **Boss-owned original SRS must never be edited.**
+
+**Source baseline:** [User-owned reviewed working SRS](https://docs.google.com/document/d/1dSqHsbTAVxkspvMRuhlycEJUCVZgCxvEG1hWBSmvuZA/edit), all Sections 1–24 and Appendices A–I. A document listing an API or screen does NOT mean it is implemented. No regulatory approval/certification is inferred.
+
+**Document count:** 14 types / 14 Markdown files, DEV-00 to DEV-13. A single master index plus 13 focused developer contracts; no duplicate competing versions. These documents reference the same working SRS but do not replace it.
+
+## Development documentation index
+
+| ID | Development document | Responsible function | Status |
+|---|---|---|---|
+| DEV-00 | [Master Development Blueprint, scope and index](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-00-master-blueprint.md) | All teams / source of truth | Specified / Approval Required |
+| DEV-01 | [Functional Modules and End-to-End Business Workflows](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-01-functional-modules-workflows.md) | Product + Finance | Specified / Approval Required |
+| DEV-02 | [Compact UI/UX Design System and All 38 Screen Contracts](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-02-ui-ux-screen-contracts.md) | UX + Frontend | Specified / Approval Required |
+| DEV-03 | [Accounting Posting Matrix and Financial Controls](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-03-accounting-posting-controls.md) | Finance + Backend | Specified / Approval Required |
+| DEV-04 | [SQL Server Data Model, ERD and Migration Design](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-04-database-erd-sql.md) | Database + Backend | Specified / Approval Required |
+| DEV-05 | [ASP.NET Core API, Endpoints and Error Contracts](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-05-api-contracts.md) | Backend | Specified / Approval Required |
+| DEV-06 | [Security, RBAC, Tenant Isolation and Audit](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-06-security-rbac-audit.md) | Security + Backend | Specified / Approval Required |
+| DEV-07 | [POS/ERP/Payroll/Bank Imports, APIs and Recovery](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-07-integrations-recovery.md) | Integrations | Specified / Approval Required |
+| DEV-08 | [All 58 Accounting & XBRL Reports](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-08-58-report-contracts.md) | Reporting + Finance | Specified / Approval Required |
+| DEV-09 | [XBRL, Kuwait CMA iFSAH and Filing Workflow](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-09-xbrl-regulator.md) | Compliance + XBRL | Specified / Approval Required |
+| DEV-10 | [Scalable, Maintainable, Fast Large-Data Architecture](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-10-scalability-large-data.md) | Architecture + DBA + SRE | Specified / Approval Required |
+| DEV-11 | [102 Test Cases, QA and UAT Test Strategy](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-11-qa-102-tests.md) | QA + Functional Owners | Specified / Approval Required |
+| DEV-12 | [CI/CD, Deployments, Backups and Operations](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-12-devops-operations.md) | DevOps + Security | Specified / Approval Required |
+| DEV-13 | [Phases, Requirements Traceability, Decisions and Release Gates](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-13-roadmap-gates.md) | PM + Tech Lead | Specified / Approval Required |
+
+## Verified existing code status
+
+- GitHub repository: https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE
+- On `development`, currently only minimal ASP.NET Core .NET 10 API with a `/health` route, GitHub Actions build workflow, PR template, `.gitignore` and documentation exist; no accounting database, GL, UI, reports, authentication, integrations or regulator submission system has been implemented.
+- Basic API build completed successfully in observed GitHub Actions run; this is NOT a test of business functions, resilience or large-data scalability.
+- `main` branch protection is not currently enforced; branch administration needs repository-owner/plan action. Publishing a private source repo publicly is never a workaround unless the owner expressly authorizes it.
+
+## Canonical scope counts and dependencies
+
+- 38 baseline product screen/workspace IDs (SCR-001–038); edition and phase exposure is conditional. Detailed exact field/action contracts and UI design sign-off remain OPEN.
+- 28 accounting reports ACC-001–028 + 30 XBRL/regulatory reports XBRL-001–030 = 58 report IDs. Individual formulas, permissions, reconciliations and expected output fixtures remain OPEN.
+- 102 specified acceptance cases TC-001–102. All are described in DEV-11; no executable test evidence is asserted.
+- 10 formal decision records DEC-001–010 and finance/engineering D-01–10. Pending decisions block dependent capabilities, not unrelated bootstrap.
+- Phase 1: identity/organization, immutable ledger, AR/AP, operations, inventory basics and minimal close/approval/audit security; Phase 2: statement reporting; Phase 3: generic XBRL; Phase 4: Kuwait CMA adapter on official evidence; Phase 5: advanced auditor automation; Phase 6: independently approved GCC adapters.
+
+## Engineering quality policy
+
+1. One authoritatively approved source for posting policy, business status and permission. Do not copy the same rules between React, controller, SQL trigger and jobs.
+2. Modular ASP.NET Core API and SQL Server OLTP first, with minimal abstractions; no speculative microservices, cross-company duplicate datasets, sharding or caching until measured benefit. SQL transactions preserve balanced double-entry, original immutable journal lines, company isolation, stable source-event idempotency and approvals.
+3. Compact enterprise forms, two columns where sensible, no gratuitous scrolling, one scroll owner, desktop 1366×768 and zoom/RTL/mobile acceptance, reusable tables/forms/actions and no dead/duplicate code.
+4. Large data: benchmark 10M/100M journal row fixtures with real read/write contention, p95/p99, Query Store, bounded cursor pagination, async report/export and safe cache invalidation; performance numbers are goals only until measured.
+5. Security: role/action/amount scope for every API/export, secret-safe logging, secure MFA, scoped audit, immutable financial/file package history and restore drills. Never infer filing acceptance from a receipt or XML well-formedness.
+6. No direct regulator API/portal claims until authorized current form/taxonomy/interface specifications and official compliance sign-off.
+
+## Required deliverable format for every feature issue
+
+SRS ID → edition / phase → Product/Finance decision and effective version → screen/flow → UI states and validation → API contract → DB migration/query and authorization → posting event (or Not Applicable) → test fixture and expected ledger/report output → performance, UX and security checks → GitHub PR/build evidence → acceptance owner/signoff/release status.
+
+Use statuses: **Specified → Business Approved → Implemented → Tested → Released**. Where blocked, use **OPEN / Approval Required** instead of falsely labeling completed. No arbitrary framework, financial, currency or regulator decision may be silently selected by a developer.
+
+## Core GitHub work and references
+
+- [Existing phase-one readiness guide](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/phase-1-readiness.md)
+- [Compact UI design baseline](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/ui-ux-compact-layout.md)
+- [Large-data performance baseline](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/architecture-performance.md)
+- [GitHub Project Board](https://github.com/users/dharmendra1031/projects/1)
+- [Implementation and decision issues](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/issues)
+
+## Open sign-off register
+
+D-01 frontend and reuse; D-10 organizational/COA/period ownership; DEC-001 edition/customer segment; DEC-002–003 official CMA applicability and form taxonomy; DEC-004 finance recognition; DEC-005 stock costing; DEC-006 FX/precision; DEC-007 native POS/consolidation; DEC-008 hosting/privacy/retention/RPO/RTO; DEC-009 maker-checker thresholds; DEC-010 58 reports/statement mappings; test load/architecture budget and schema migration plan. These require named approving parties and evidence before the corresponding production release.
