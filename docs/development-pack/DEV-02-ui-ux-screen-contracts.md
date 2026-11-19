@@ -126,3 +126,50 @@ Documented test IDs after this appendix: TC-001–102. They are specification ID
 
 ## Open screen ownership
 Quotations, sales orders/delivery, purchase requests/PO/GRN, expenses, assets, budgets, party masters and tenant billing have functional scope but need exact owner screen/action. Reuse UI workspaces where possible instead of inventing one screen per entity.
+
+## Cross-document review corrections — 2026-11-19
+
+Appendix E's repeated generic `draft/save/stale/empty/read-only` sentence is a **possible-state inventory**, not a mandatory UI for every screen. The table below sets **candidate screen type and scroll owner**, to be approved with real wireframes. `Form` requires validation/draft only when mutable; `List` requires loading/empty/filter/error; `Read` is read-only except explicit scoped comments or exports; `Workflow` has versioned status/next-action and no duplicate service. Do not create Save buttons on login or immutable previews.
+
+| SCR | Type / main scroll owner | Candidate primary UI behavior |
+| --- | --- | --- |
+| 001 | Auth form; normal viewport | Sign-in/MFA/recovery; no SaveDraft, no historical mode |
+| 002 | Dashboard; page if content grows | Scoped cards, freshness and authorized drilldowns |
+| 003 | Master form; page | Compact company/branch editor, guarded activation |
+| 004 | Tree+details; tree pane | COA hierarchy, readable selected account form |
+| 005 | Journal workbench; journal line grid | Persistent debit/credit difference and allowed actions |
+| 006 | Sales workbench; invoice lines grid | Compact customer, lines and totals; status-dependent actions |
+| 007 | Purchase workbench; bill lines grid | Supplier, receipt match and approval exceptions |
+| 008 | Reconciliation workbench; line grid | Match/unmatch and variance always visible |
+| 009 | Statement builder; preview/results | Draft vs frozen version, formula source drilldown |
+| 010 | Regulatory master form; page | Evidence-based company applicability only |
+| 011 | Taxonomy library; table | Import/validate/approve immutable versions |
+| 012 | Mapping workbench; mapping table | Search, conflicts and approved version |
+| 013 | Conditional disclosure form; page | Mandated legal fields and attachments accessible |
+| 014 | Validation results; table | Error rule, fact drilldown and correction route |
+| 015 | Immutable filing preview; document | Read-only exact version, permitted comments |
+| 016 | Package workflow; page | Draft/candidate then finalize only after exact approval |
+| 017 | Filing approval queue; grid | Candidate hash/version signoff; reuse core approvals |
+| 018 | Submission register; grid | Acknowledgement distinct from acceptance |
+| 019 | Audit history; table | Scoped immutable record and controlled export |
+| 020 | Report centre; results grid | Compact shared filters with SCR-038 |
+| 021 | Onboarding wizard; page | Resume draft, progress and activation blockers |
+| 022 | Roles/approval matrix; grid | Scoped grants, MFA and no self-escalation |
+| 023 | Fiscal/period config; list | Lock and reopen permission-sensitive flows |
+| 024 | Journal history; grid | Search/read-only posted, authorized reverse link |
+| 025 | Receipt allocation; invoice allocation grid | Available and remaining amounts without duplicate collection |
+| 026 | Customer ledger; table | As-of totals and linked credits |
+| 027 | Supplier payment allocation; bill grid | Control outstanding and bank access |
+| 028 | Supplier ledger; table | Credits/ageing and AR/AP tie-out |
+| 029 | Inventory master/stock ledger; table | Quantity vs value and warehouse scope |
+| 030 | Receipt/count/transfer; line grid | UOM, variance and branch checks |
+| 031 | Cash/bank register; table | Authorized register and transfers |
+| 032 | Closing checklist; page | Phase-1 minimum checks/locks, Phase-2 rich exceptions |
+| 033 | Unified approval inbox; grid | Shared approval source with SCR-017 |
+| 034 | Auditor evidence; table | Scoped, expiring read/review engagement |
+| 035 | Integration jobs; table | Safe retry of stable event IDs |
+| 036 | Filing wizard; page | Step-dependent validity and saved version |
+| 037 | Filing receipt review; detail/document | Immutable receipt and verified decision |
+| 038 | Report filter panel; panel | Shared filters with SCR-020, not second reporting backend |
+
+**Scroll acceptance:** a short standard master form has no gratuitous vertical page scroll at 1366×768/100%; a long journal/ledger/Arabic disclosure **may** scroll in its one designated content owner. Avoid page+modal+table nested scrolling, but allow zoom 125/200%, 320/375px mobile, keyboard focus, error visibility and long RTL labels. A detailed field/route/conditional-action matrix remains **OPEN** per screen and should not be confused with this navigation inventory. UI implementation is still absent. Relevant SRS J-07/J-08; TC-091–102.
