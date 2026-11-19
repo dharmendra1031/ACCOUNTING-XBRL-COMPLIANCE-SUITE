@@ -4,6 +4,9 @@ info:
   version: 0.1.0-draft
   description: |
     DESIGN-ONLY OpenAPI for initial scoped company/account/journal flows.
+    Application-owned IDs use SQL BIGINT and draft JSON int64, never UUID.
+    JS clients must verify Number.isSafeInteger for any int64; if projected key values can exceed 2^53-1, approve decimal-string transport before deployment.
+    Create-form nextIdEstimate is ONLY a non-reserved advisory preview; actual ID comes from commit response. See SRS Appendix K.
     These are NOT implemented endpoints. User-owned SRS §14, Appendix F.1/F.2,
     DEV-05, and Round 2 R2-01/R2-02 control interpretation.
     Signed D-10, DEC-004/006/009, identity provider, database and finance rules
@@ -205,8 +208,9 @@ paths:
         - name: accountId
           in: query
           schema:
-            type: string
-            format: uuid
+            type: integer
+            format: int64
+            minimum: 1
         - name: status
           in: query
           schema:
@@ -381,8 +385,9 @@ paths:
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
+            format: int64
+            minimum: 1
         - $ref: '#/components/parameters/IdempotencyKey'
       requestBody:
         required: true
@@ -418,23 +423,26 @@ components:
       in: path
       required: true
       schema:
-        type: string
-        format: uuid
+        type: integer
+        format: int64
+        minimum: 1
       description: Target company; server MUST verify current membership, not trust path alone.
     AccountId:
       name: accountId
       in: path
       required: true
       schema:
-        type: string
-        format: uuid
+        type: integer
+        format: int64
+        minimum: 1
     JournalId:
       name: journalId
       in: path
       required: true
       schema:
-        type: string
-        format: uuid
+        type: integer
+        format: int64
+        minimum: 1
     IfMatch:
       name: If-Match
       in: header
@@ -523,8 +531,9 @@ components:
       required: [principalId, companies]
       properties:
         principalId:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         companies:
           type: array
           items:
@@ -534,13 +543,15 @@ components:
       required: [companyId, actions]
       properties:
         companyId:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         branchIds:
           type: array
           items:
-            type: string
-            format: uuid
+            type: integer
+            format: int64
+            minimum: 1
         actions:
           type: array
           items:
@@ -552,11 +563,13 @@ components:
       required: [id, tenantId, legalName, functionalCurrency, version]
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         tenantId:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         legalName:
           type: string
         functionalCurrency:
@@ -572,11 +585,13 @@ components:
       required: [id, companyId, code, name]
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         companyId:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         code:
           type: string
         name:
@@ -588,11 +603,13 @@ components:
       required: [id, companyId, startDate, endDate, state, version]
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         companyId:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         startDate:
           type: string
           format: date
@@ -609,8 +626,9 @@ components:
       required: [id, code, nameEn, accountType, active, version]
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         code:
           type: string
           maxLength: 40
@@ -620,8 +638,9 @@ components:
         nameAr:
           type: [string, 'null']
         parentId:
-          type: [string, 'null']
-          format: uuid
+          type: [integer, 'null']
+          format: int64
+          minimum: 1
         accountType:
           type: string
           enum: [Asset, Liability, Equity, Revenue, Expense]
@@ -647,8 +666,9 @@ components:
         nameAr:
           type: [string, 'null']
         parentId:
-          type: [string, 'null']
-          format: uuid
+          type: [integer, 'null']
+          format: int64
+          minimum: 1
         accountType:
           type: string
           enum: [Asset, Liability, Equity, Revenue, Expense]
@@ -671,8 +691,9 @@ components:
         postable:
           type: boolean
         parentId:
-          type: [string, 'null']
-          format: uuid
+          type: [integer, 'null']
+          format: int64
+          minimum: 1
     DecimalAmount:
       type: string
       pattern: '^(0|[1-9][0-9]*)(\.[0-9]{1,8})?$'
@@ -689,8 +710,9 @@ components:
       required: [accountId, debit, credit]
       properties:
         accountId:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         debit:
           $ref: '#/components/schemas/DecimalAmount'
         credit:
@@ -711,11 +733,13 @@ components:
           type: string
           format: date
         periodId:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         branchId:
-          type: [string, 'null']
-          format: uuid
+          type: [integer, 'null']
+          format: int64
+          minimum: 1
         memo:
           type: [string, 'null']
         lines:
@@ -729,14 +753,17 @@ components:
       required: [id, companyId, postingDate, periodId, status, lines, version]
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         companyId:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         periodId:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         postingDate:
           type: string
           format: date
@@ -745,18 +772,37 @@ components:
         version:
           type: string
         journalNumber:
-          type: [string, 'null']
+          type: [integer, 'null']
+          format: int64
+          minimum: 1
+          description: Separate issued business serial, not the journal internal ID; null while draft/unissued.
         lines:
           type: array
           items:
             $ref: '#/components/schemas/JournalLineInput'
+    IdPreview:
+      type: object
+      required: [reservationStatus]
+      description: Optional scoped create-form hint; not a persisted identifier, not a reservation and never submitted as a primary key.
+      properties:
+        nextIdEstimate:
+          type: [integer, 'null']
+          format: int64
+          minimum: 1
+        estimateGeneratedAt:
+          type: [string, 'null']
+          format: date-time
+        reservationStatus:
+          type: string
+          enum: [NotReserved]
     JournalCommandResult:
       type: object
       required: [journalId, status, version, correlationId, replayed, nextAllowedActions]
       properties:
         journalId:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         status:
           $ref: '#/components/schemas/JournalStatus'
         version:
@@ -770,8 +816,9 @@ components:
           items:
             type: string
         reversesJournalId:
-          type: [string, 'null']
-          format: uuid
+          type: [integer, 'null']
+          format: int64
+          minimum: 1
     ReverseJournalRequest:
       type: object
       required: [reversalPostingDate, reason]
@@ -800,8 +847,9 @@ components:
       required: [approvalId, decision, correlationId]
       properties:
         approvalId:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         decision:
           type: string
         correlationId:
@@ -815,13 +863,15 @@ components:
       required: [id, objectType, objectId, objectVersion, status]
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         objectType:
           type: string
         objectId:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
+          minimum: 1
         objectVersion:
           type: string
         status:
