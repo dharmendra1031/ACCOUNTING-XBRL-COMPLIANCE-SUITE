@@ -34,6 +34,7 @@ erDiagram
   COMPANY ||--o{ SOURCE_EVENT_POSTING : de_duplicates
   FISCAL_PERIOD ||--o{ JOURNAL_HEADER : contains
   SOURCE_EVENT_POSTING ||--o| JOURNAL_HEADER : creates
+  SOURCE_EVENT_POSTING ||--o{ INBOUND_DELIVERY : correlated_by_verified_identity
   JOURNAL_HEADER ||--|{ JOURNAL_LINE : lines
   ACCOUNT ||--o{ JOURNAL_LINE : referenced
   JOURNAL_HEADER ||--o{ JOURNAL_HEADER : reverses
@@ -55,7 +56,8 @@ This graph illustrates business relationships only; physical FKs must enforce sa
 | Account | PK `AccountId`; UNIQUE (TenantId,CompanyId,AccountId); UNIQUE (TenantId,CompanyId,Code) | ParentId self-FK in same company, Type, NormalSide, Postable, Status, RowVersion; no tree cycles checked transactionally |
 | UserMembership | PK `MembershipId`; unique active user+company scope | TenantId,CompanyId,UserId, effective dates, revocation and version; independent security checks |
 | ActionGrant | PK `GrantId`; uniqueness depends on policy version | MembershipId, ActionKey, Branch/Period/Type scope, AllowedMaxAmount, ValidFrom/To, PolicyVersion, RowVersion |
-| SourceEventPosting | PK `PostingEventId`; **UNIQUE (TenantId,CompanyId,SourceSystem,EventType,StableEventId)** | PayloadHash `binary(32)`, SourceDocId/Version, JournalId, EventStatus, ReceivedAt; no second posting for changed document version |
+| SourceEventPosting | PK `PostingEventId`; **UNIQUE (TenantId,CompanyId,EventType,CanonicalEconomicEventId)** | Canonical PayloadHash `binary(32)`, approved posting owner, source document and version, state. JournalHeader references SourceEventPosting uniquely. Do not also add a mandatory reverse JournalId FK (circular insert dependency). SourceSystem is NOT part of financial event uniqueness. |
+| InboundDelivery (only if integration enabled) | PK `DeliveryId`; UNIQUE (TenantId,CompanyId,IntegrationId,ExternalMessageId) | External SourceSystem/ExternalEventId, payload hash, VerifiedPostingEventId, Received/Correlated/Quarantined. Never post an uncorrelated delivery or guess a match from amount/date alone. |
 | JournalHeader | PK `JournalId`; UNIQUE (TenantId,CompanyId,JournalId); UNIQUE company+fiscal series+VoucherNo **after signed numbering policy** | TenantId/CompanyId/PeriodId, SourceEventPostingId, Status, PostingDate, ApprovalRef, ReversesJournalId, RowVersion for draft only |
 | JournalLine | PK `LineId`; scoped JournalId and AccountId composite FKs | LineNo, DebitFunctional, CreditFunctional, OriginalAmount, OriginalCurrency, FXRate, RateDate, dimensions, cost/event refs; zero/negative/single-side line rules require Finance approval |
 | ApprovalDecision | PK `DecisionId` | Tenant/Company, object type/id/version, candidate hash where relevant, actor, decision, reason, EffectivePolicyVersion; maker ≠ checker where controlled |
@@ -67,7 +69,7 @@ Additional future entities must be created **only with approved workflows**: Cus
 ## 4. Database verification invariants
 
 1. `JournalHeader` company, period and every `JournalLine.AccountId` resolve to the SAME tenant/company, using composite FKs and scoped checks; a generic `AccountId` alone must not reference another company.
-2. A source event can produce its original committed journal once, independent of document revision. Same hash retry returns same JournalId; changed hash with same event identity yields conflict, not a second journal. Retry request key is a separate transport-level concern.
+2. One **canonical economic event**, regardless of POS/ERP transport source, produces its original committed journal at most once, independent of document revision. Same verified canonical key and payload hash replay returns original JournalId; changed hash yields conflict, not another journal. External delivery and request keys are separate. If cross-source alias verification is impossible, quarantine pending authorized reconciliation.
 3. Within a posting transaction, periods/accounts/approvals remain allowed, and `sum(DebitFunctional) = sum(CreditFunctional)` at the APPROVED company functional-currency precision. SQL CHECK cannot enforce cross-row sums; use one trusted posting use case and DB least-privilege controls.
 4. Posted journals and original account references are immutable and cannot be updated through any ordinary API or background job. A reversal is a NEW posting event and linked JournalHeader, with authorized open-period date.
 5. `FiscalPeriod` closing and posting synchronize on the same scoped resource/locking order. Read checks outside the transaction do not prove authorization at commit.
