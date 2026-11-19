@@ -49,3 +49,13 @@ Proposed Level A stress fixture: 10M ledger lines, 1M invoices, 2M stock movemen
 
 ## Acceptance
 Stable database sort and cursor, scoped FK/queries, SQL plans, no N+1, bounded DOM memory, accepted 202 jobs for large exports, correct financial and security invariants under contention, restoration at scale; TC-081–090. Current API build passing does not validate these.
+
+## Cross-document review corrections — 2026-11-19
+
+**Durability vs simplicity:** A single modular API + SQL Server stays the baseline. When committed financial work implies follow-up jobs, an in-transaction durable job record or demonstrably equivalent persisted handoff is required; do not rely on `Task.Run`, in-memory queues or a best-effort post-commit publish. Implement the lightest proven persistence/worker arrangement; avoid generic distributed brokers/outbox systems until a real external-delivery need exists. In-memory optimization must NEVER duplicate or lose financial recognition.
+
+**Performance budget is measurable, not a guarantee:** 10M rows/100 sessions and 100M rows/500 sessions describe proposed synthetic capacity tests. Explicitly record hardware, storage, indexing, tenants and largest-tenant skew, cold/hot cache, document age, query mix, concurrency and write-to-read ratio. API p95 is measured server-side, data-ready p95 at browser, background job completion separately from 202 acknowledgment. Do not promise 400ms GET or 1.5s posting at unspecified cloud cost or Level B before test evidence.
+
+**Bottleneck ladder:** Inspect SQL Query Store, actual execution plans, scans, sort spills, lock waits, indexes and transaction duration first; then consider targeted scoped cache/approved snapshots, bounded async jobs or more stateless API instances, and finally optional columnstore/partitioning/analytics only after measured evidence. Keep mutable GL records authoritative and immutable posted references. Recheck permission + as-of data freshness under concurrency after every performance optimization; track TC-081–090 and TC-091–102 without claiming they pass.
+
+**Frontend large-data constraint:** Thousands of transactions are paginated/virtualized using server-side scoped filters, deterministic tie-breaker keys and bounded DOM memory; compact forms must remain keyboard and 200%-zoom accessible rather than forcing fake zero-scroll layouts. See SRS J-06/J-12.
