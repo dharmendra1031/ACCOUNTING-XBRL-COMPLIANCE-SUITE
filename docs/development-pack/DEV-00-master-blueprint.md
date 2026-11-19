@@ -8,7 +8,7 @@ The authoritative developer handover pack for Keifac Accounting & XBRL Complianc
 
 **Source baseline:** [User-owned reviewed working SRS](https://docs.google.com/document/d/1dSqHsbTAVxkspvMRuhlycEJUCVZgCxvEG1hWBSmvuZA/edit), all Sections 1–24 and Appendices A–I. A document listing an API or screen does NOT mean it is implemented. No regulatory approval/certification is inferred.
 
-**Document count:** 14 types / 14 Markdown files, DEV-00 to DEV-13. A single master index plus 13 focused developer contracts; no duplicate competing versions. These documents reference the same working SRS but do not replace it.
+**Document count:** 14 canonical DEV-00–DEV-13 specification documents plus 1 consolidated [Pre-Code Gap Register / Readiness Matrix](PRE-CODE-GAP-REGISTER.md). The register is a cross-reference and issue tracker, not a fifteenth competing design specification. No duplicated source-of-truth contracts. These documents reference the same working SRS but do not replace it.
 
 ## Development documentation index
 
@@ -28,6 +28,10 @@ The authoritative developer handover pack for Keifac Accounting & XBRL Complianc
 | DEV-11 | [102 Test Cases, QA and UAT Test Strategy](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-11-qa-102-tests.md) | QA + Functional Owners | Specified / Approval Required |
 | DEV-12 | [CI/CD, Deployments, Backups and Operations](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-12-devops-operations.md) | DevOps + Security | Specified / Approval Required |
 | DEV-13 | [Phases, Requirements Traceability, Decisions and Release Gates](https://github.com/dharmendra1031/ACCOUNTING-XBRL-COMPLIANCE-SUITE/blob/development/docs/development-pack/DEV-13-roadmap-gates.md) | PM + Tech Lead | Specified / Approval Required |
+
+## Pre-code design freeze control
+
+Use [PRE-CODE-GAP-REGISTER.md](PRE-CODE-GAP-REGISTER.md) for the 8-layer pre-code audit, 38 screen→API/data/role/test traceability rows, 58 report rows and 24 OPEN gaps. A `PROPOSED` mapping is not an approved OpenAPI/ERD/UX/Finance rule. This document is the single gap register: do not create separate duplicate tracking spreadsheets or ticket descriptions for the same gap without cross-links. Round 1 source inventory is reviewed; Round 2 physical designs and sign-offs, Round 3 adversarial/performance proof, and Round 4 feature-specific design freeze remain pending.
 
 ## Verified existing code status
 
