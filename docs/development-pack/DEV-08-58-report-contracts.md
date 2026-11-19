@@ -84,3 +84,13 @@ RISK-G13 [OPEN REPORTING]: All 58 report IDs need individually approved source, 
 
 ## Approval needed
 DEC-010 and D-08 Finance/Reporting sign-off; CMA report taxonomy/form requirements separately require DEC-002/003. Tests TC-004/005/027/045/052/057/073/079/086.
+
+## Cross-document review corrections — 2026-11-19
+
+**Catalogued is not implemented.** Exactly 28 ACC and 30 XBRL report IDs are listed. No report's actual SQL, statutory formula, sample expected values or official CMA fixture is approved by a title alone. The SRS report descriptions are user-facing *intent*, not ready-to-code calculations. Treat all 58 as **Specified / Formula OPEN**, not 58 mandatory Phase-1 features.
+
+**One-page contract required for each applicable report ID before release:** owner + edition + release phase; permitted role/company/branch scope; statement basis and company financial year; period start/end + posting cutoff and timezone; source GL/subledger/stock/approved imported external statements; debit/credit normal sign and currency/FX/rounding; formula, mapping and exceptional null/nil; comparative and drilldown; reconciliation assertion with independently verified numeric fixture; export fields and redaction; running/approved snapshot version+hash; accessibility/Arabic layout; p95 dataset/profile and cancellation/job thresholds.
+
+**Consistency invariants:** GL trial balance and report source must refer to the same immutable approved cutoff; AP/AR ageing must reconcile by identical effective date, currency, company and policy; Inventory valuation references signed cost layers; Cash flow/equity statements need separately approved classification and movement mappings; “group totals” are **not consolidated statements** absent approved elimination/FX/ownership policy. Do not display missing source/mapping as invented zero. A report generated from provisional data must be visibly marked provisional and cannot feed a final filing.
+
+**Concurrency and export:** A long report gets an authorized job record and 202 response, then immutable output tied to requested filters/cutoff and source version; a role revocation blocks delayed delivery. Caching or aggregate tables must never skip tenant/permission/version invalidation. Finance sign-off (DEC-010/D-08) and report fixture remain OPEN, while generic reporting skeleton work can proceed without invented formulas. See SRS J-05/J-10.
