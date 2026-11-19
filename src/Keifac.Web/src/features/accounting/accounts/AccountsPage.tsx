@@ -1,4 +1,5 @@
 import { EmptyState, PageHeading, Surface } from "../../../components/ui/PreviewElements";
+import { AccountFormPreview } from "./AccountFormPreview";
 import type { Labels } from "../../../shared/i18n/translations";
 
 export function AccountsPage({ t }: { t: Labels }) {
@@ -9,12 +10,8 @@ export function AccountsPage({ t }: { t: Labels }) {
         <Surface title={t.accountList}>
           <EmptyState title={t.empty} description={t.accountEmpty} />
         </Surface>
-        <Surface title={t.accountDetail}>
-          <div className="readonly-field">
-            <span className="field-label">{t.recordId}</span>
-            <output>{t.recordIdHint}</output>
-          </div>
-          <EmptyState title={t.noSelection} description={t.accountEmpty} />
+        <Surface title={t.formPreview}>
+          <AccountFormPreview t={t} />
         </Surface>
       </div>
     </>

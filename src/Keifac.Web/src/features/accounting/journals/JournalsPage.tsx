@@ -1,4 +1,5 @@
 import { EmptyState, PageHeading, Surface } from "../../../components/ui/PreviewElements";
+import { RecordIdField } from "../../../components/ui/RecordIdField";
 import type { Labels } from "../../../shared/i18n/translations";
 
 export function JournalsPage({ t }: { t: Labels }) {
@@ -7,8 +8,11 @@ export function JournalsPage({ t }: { t: Labels }) {
       <PageHeading title={t.journals} subtitle={t.journalsDetail} preview={t.preview} />
       <Surface title={t.journalHeader}>
         <div className="detail-grid">
-          <div className="readonly-field"><span className="field-label">{t.recordId}</span><output>{t.recordIdHint}</output></div>
-          <div className="readonly-field"><span className="field-label">{t.voucherNo}</span><output>{t.assignedOnIssue}</output></div>
+          <RecordIdField t={t} />
+          <div className="readonly-field">
+            <span className="field-label">{t.voucherNo}</span>
+            <span className="readonly-value">{t.assignedOnIssue}</span>
+          </div>
         </div>
       </Surface>
       <Surface title={t.journalLines}>

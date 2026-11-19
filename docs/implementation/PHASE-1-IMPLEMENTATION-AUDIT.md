@@ -66,3 +66,19 @@ Use one owning module per behavior, maintain strict separation of UI/API/persist
 - Existing pre-code static tests remain separate from frontend code checks and actual acceptance tests.
 
 References: working SRS 1dSqHsbTAVxkspvMRuhlycEJUCVZgCxvEG1hWBSmvuZA, DEV-02, DEV-04, DEV-06, DEV-11, PRE-CODE-GAP-REGISTER, R2-07 and GitHub issues #4, #7, #8, #9, #10.
+
+## 7. Round-2 code audit and permitted implementation (19 November 2026)
+
+Scope: latest development source reviewed against the user-owned working SRS (especially SCR-004/005, K-07–11, Appendix I/J), DEV-02 and R2-07. This is a code/design review, **not** owner approval or full 38-screen acceptance.
+
+| Finding | Evidence | Disposition |
+| --- | --- | --- |
+| No resolved npm lockfile | `src/Keifac.Web/package-lock.json` absent; CI uses `npm install` | OPEN P0 for reproducible deployment: generate reviewed lockfile from authorized registry, commit it, then replace install with `npm ci`. Do not fabricate lockfile bytes. |
+| No runnable frontend UI regression tests | Frontend job initially only TypeScript check/build | Partially improved: Node built-in bilingual label tests; browser visual/interaction evidence still OPEN. |
+| Record-ID presentation duplicated | COA and Journal each separately rendered ID placeholder | Reuse one `RecordIdField` in preview; actual persisted SQL numeric IDs remain unimplemented. |
+| COA preview did not expose field layout | Accounts page had only empty-state and ID | Add standalone **unconnected** review form with real reset, explicit unsaved notice, no Save/Post; exact API and field approval remain OPEN. |
+| UI shell and RTL | Three routed previews, EN/AR toggle, responsive CSS | Keep existing application shell; 1366x768/320px/200% zoom, keyboard and screen reader evidence NOT EXECUTED. |
+| Identity/DB/Finance policy | No IdP, authorization, SQL schema, journal posting or economic-event fixture | Leave real mutations blocked pending D-10, DEC-004/005/006/009, D-11 and named reviewers. |
+| 58 reports, XBRL and operations | Specification only | No financial/reporting or regulatory completion claims until report-level formulas and official evidence are approved. |
+
+Build checks, bilingual tests and existing pre-code static contract checks are necessary but not sufficient for signed UX, accounting, security, or database acceptance. No new architectural layer or dependency added by this iteration.

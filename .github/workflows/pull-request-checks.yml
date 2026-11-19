@@ -47,6 +47,8 @@ jobs:
           node-version: '22'
       - name: Install pinned direct dependencies
         run: npm install --no-audit --no-fund
+      - name: Test bilingual preview labels
+        run: npm test
       - name: Typecheck and build preview
         run: npm run build
 
