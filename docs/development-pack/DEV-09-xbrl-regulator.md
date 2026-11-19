@@ -126,3 +126,11 @@ Reference note: Regulatory materials can change. The project owner and complianc
 
 ## Acceptance
 Validation should include standards-conformant dependencies, QName, dimensions, types, contexts, fractional percentages using xbrli:pure where applicable, decimals, nil vs zero, comparisons, rule-pack version, duplicate facts and hash mismatch tests. Relevant cases TC-006–015, 031–036, 039, 043, 048–052, 056, 061, 063, 070/071. Regulatory sign-off OPEN.
+
+## Cross-document review corrections — 2026-11-19
+
+**Important lifecycle separation:** `NotApplicable/Applicable` (legal obligation), `Draft/Validated/Candidate/Approved/Finalized` (immutable package version), `NotSent/UnknownOutcome/Acknowledged` (transmission), and `Pending/Accepted/Rejected` (authoritative regulator decision) must not be combined into one mutable status enum. Due/Overdue is calculated separately using approved jurisdiction deadline/timezone rules.
+
+**Exact artifact approval:** A labelled diagnostic draft may use traceable provisional source and is NEVER filing-ready. A final candidate must freeze approved financial statement or authorized external statement version, disclosure, mapping, taxonomy and rule pack. Generate immutable candidate *before* the signatory approves exact candidate **bytes + input hash**; finalizing MUST NOT serialize again and change bytes. Any new byte/source/taxonomy version forces new candidate/validation/approval; rejection creates a linked version rather than overwriting it. Historical semantic regeneration and byte hash reproducibility are different tests (TC-018/039/061).
+
+**Standards vs jurisdiction:** Validate generic XBRL taxonomies, QNames, contexts, currencies/units, fractions/decimals, dimensions, nil/zero and calculations using a standards-conformant engine; **separate** those results from the current CMA form/domain business rules, attachment requirements, applicable legal entities and actual portal acceptance. CMA iFSAH sources listed in SRS are references for compliance officers to verify, not proof that an API exists or that all Kuwaiti entities file. No automatic CMA connector or filing-ready claim until DEC-002/003 is signed with official fixtures. See SRS J-10/J-11.
