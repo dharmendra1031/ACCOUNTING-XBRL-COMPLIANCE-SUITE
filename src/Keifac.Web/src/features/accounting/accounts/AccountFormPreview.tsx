@@ -3,7 +3,7 @@ import { RecordIdField } from "../../../components/ui/RecordIdField";
 
 export function AccountFormPreview({ t }: { t: Labels }) {
   return (
-    <form className="preview-form">
+    <form className="preview-form" onSubmit={(event) => event.preventDefault()}>
       <div className="form-grid">
         <RecordIdField t={t} />
         <div className="form-field">
