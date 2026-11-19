@@ -42,10 +42,12 @@ Interpretation: a `Reversed` view is derived from linked immutable reversal post
 1. Authenticate; resolve tenant/company and current grants from authoritative storage; evaluate action, amount, SoD, and period.
 2. In a bounded SQL transaction, lock/select affected fiscal period and source event key in a consistent order, validate company-scoped account eligibility and current approval/source hash.
 3. Canonicalize and validate event payload, currency conversion precision and invariant of balanced functional debits/credits. Do not use an unapproved tax, valuation or FX policy.
-4. Insert or resolve unique stable source-event posting key. On exact same-key/same-hash already Posted, return original journal reference (and HTTP semantics per contract). On key/hash mismatch, reject with 409 `EVENT_PAYLOAD_CONFLICT`; on transient uniqueness race, reload committed original.
+4. Insert or resolve unique stable source-event posting key. On exact same-key/same-hash already Posted, return original journal reference (and HTTP semantics per contract). On key/hash mismatch, reject with 409 `EVENT_PAYLOAD_CONFLICT`; on transient uniqueness race, reload committed original. **Replay ordering:** after authenticating and enforcing current permission to access the original company/action outcome, an exact replay may return the already-committed reference despite an obsolete draft `If-Match`; do not re-run posting, approve again, or recalculate under a newer policy. A changed payload must not evade the stale-version or hash conflict check.
 5. For the first valid event, insert JournalHeader and JournalLines, source-state and immutable audit record; persist any required durable job in the same transaction (or equivalent proven atomic handoff), then commit.
 6. Return committed JournalId, source event identity, version/correlation and allowed actions. An HTTP timeout does not mean posting failed; server-side retries must be safe.
 7. Reversal is a new approved event, current period must be open, link to original and disallow double reverse/correction under signed policy.
+
+**Canonical hash rule (draft):** compute a deterministic hash from immutable financial event type, stable event ID, legal company, line amounts/currencies, recognized posting date and effective policy snapshot; exclude request retry IDs and mutable UI draft-version metadata. Exact canonical field list and serializer version must be signed before code. Store first committed hash/policy version and never hash a new current policy over an old event when checking identical retry. This avoids double posting after permission or policy changes while still checking current authorization for disclosing the original result.
 
 ## 4. Concrete **design-only** fixture examples
 
