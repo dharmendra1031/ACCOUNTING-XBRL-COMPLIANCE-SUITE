@@ -33,3 +33,21 @@ jobs:
       - name: Check pull request patch whitespace
         if: github.event_name == 'pull_request'
         run: git diff --check "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}"
+
+  design-contracts:
+    name: Pre-code documentation and OpenAPI structural check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install pinned YAML parser
+        run: python -m pip install PyYAML==6.0.2
+
+      - name: Verify design contract consistency (not business tests)
+        run: python tests/contracts/verify_precode.py
