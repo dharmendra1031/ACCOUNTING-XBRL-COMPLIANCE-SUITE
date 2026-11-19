@@ -34,6 +34,10 @@
 | R2-07 Signoff | Decision register and feature DoR/DoD | This file | OPEN owner approvals |
 | [R2-08 Code ownership](08-FEATURE-CODE-OWNERSHIP-AND-DEPENDENCIES.md) | 38-screen backend module ownership, proposed folder responsibilities and no-duplicate dependency boundaries | 38 owner mappings drafted | PROPOSED, frontend framework and team approval OPEN |
 
+### R2-09 — Six-blocker decision packet and UX prototype
+
+[Single decision packet](09-SIX-BLOCKER-DECISION-PACKET.md) and [self-contained compact UX prototype](prototypes/compact-accounting-workspace.html) prepared. The static prototype has sample COA/Journal/Invoice forms with local-only interactions; it is **not an actual React app, accepted wireframe, financial transaction or performance proof**. Do not label D-01, D-10, DEC-004/005/006/009 or D-09 APPROVED on the basis of these artifacts. Named Product/Finance/DBA/Security/Ops approvals, actual UI review and representative SQL/browser results are still required.
+
 ## 3. Exact Ready gate per feature (before production feature coding)
 
 An in-scope feature MUST have these 10 check items, marked Accepted, Not Applicable with reason, or Blocked:
