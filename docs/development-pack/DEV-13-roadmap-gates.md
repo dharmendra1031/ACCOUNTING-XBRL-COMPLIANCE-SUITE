@@ -92,3 +92,11 @@ Ready requires linked SRS requirement, edition/phase, approved business decision
 **Decision log row must include:** `DEC/D ID | scope | current OPEN status | accountable role/person | alternatives | approved choice and rationale | version/effective date | affected SRS/screens/APIs/DB | expected tests | evidence link | approval timestamp | release gate`. Blank owner/evidence means the decision remains OPEN. Open blockers prevent only **dependent live functionality**; they do not block harmless docs, test harnesses and safe technical bootstrapping.
 
 **Master change rule:** A signed business change updates the user-owned working SRS, every affected DEV contract, the exact GitHub issue and fixture expected results before merging implementation. All documentation is derivation, not a second competing authority. New technical or regulator facts require primary evidence; avoid declaring DEC-001–010 resolved from a developer assumption. See SRS Appendix J.
+
+## D-11 — Project-wide numeric ID and numbering policy (OPEN)
+
+- UX rule **specified**: first read-only ID field on entity Create/Edit/Details; unsaved Create shows a clearly marked non-reserved next-ID estimate, after Save shows the actual SQL-generated value.
+- Engineering recommendation: internal keys `BIGINT IDENTITY(1,1)`; their values can have gaps. Do not use `MAX+1` as a primary-key allocator. External standard identifiers remain source-format.
+- Accounting serial **proposed**: gapless committed `BusinessSerialNo` per approved company/document/fiscal series with short transactional counter, audited voids and unique index. Cancelled issues remain in numbering ledger and never reused.
+- To close D-11: Product signs how users see provisional vs confirmed ID and whether a draft is created on open; DBA approves schema/preview SQL and concurrent 10M+ load impact; Finance/Compliance signs business serial timing, scope and legal continuity. Literal universal gapless technical PK needs separate explicit cost/concurrency signoff.
+- Related SRS K-01–K-11, DEV-02/04/05, R2-01/03/04/09 and documented regression scenarios. This decision is not yet Code-Ready.
