@@ -5,11 +5,7 @@ import type { Labels } from "../../shared/i18n/translations";
 export function OverviewPage({ t }: { t: Labels }) {
   return (
     <>
-      <div className="page-heading">
-        <span className="eyebrow">{t.preview}</span>
-        <h1>{t.workspace}</h1>
-        <p>{t.intro}</p>
-      </div>
+      <PageHeading title={t.workspace} subtitle={t.intro} preview={t.preview} />
       <Surface title={t.quickAccess}>
         <div className="quick-grid">
           {[
