@@ -205,3 +205,30 @@ td { padding: 0; border-bottom: 1px solid #e9edf2; }
 .form-field textarea:focus { border-color: #416c9a; }
 .full-span { grid-column: 1 / -1; }
 .section-note { margin-bottom: 14px; }
+
+/* Onboarding and access design-review layouts: no persistence, grants or activation. */
+.wizard-steps { display: flex; flex-wrap: wrap; gap: 7px; }
+.wizard-step { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 7px 10px;
+  background: #fff; border: 1px solid #dce3eb; border-radius: 7px; color: #52677d;
+  font-size: 12px; font-weight: 600; cursor: pointer; text-align: start; }
+.wizard-step:hover { background: #f4f7fb; }
+.wizard-step.current { background: #eaf1fa; border-color: #8eabc9; color: #174577; }
+.wizard-number { color: #69829a; font-variant-numeric: tabular-nums; font-size: 11px; }
+.wizard-hint { margin-top: 14px; }
+.wizard-footer { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center;
+  gap: 12px; padding-top: 14px; margin-top: 16px; border-top: 1px solid #e5e9ef; }
+.wizard-activation { margin-top: 14px; }
+.review-list { border: 1px solid #e2e8ef; border-radius: 7px; }
+.review-row { display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 10px 12px; border-bottom: 1px solid #e5e9ef; font-size: 12px; }
+.review-row:last-child { border-bottom: none; }
+.status-neutral { color: #61758b; font-size: 11px; white-space: nowrap; }
+.security-note { border: 1px solid #d9e4f1; background: #f2f7fd; padding: 10px 13px; border-radius: 7px;
+  font-size: 12px; color: #365a7e; margin-bottom: 14px; }
+.preview-data-table { min-width: 580px; }
+.preview-data-table td { padding: 0; }
+.check-button:disabled, .reset-button:disabled { opacity: .5; cursor: not-allowed; }
+.form-field input:read-only { color: #688096; background: #f7f9fc; }
+.form-field select:disabled { color: #688096; background: #f7f9fc; cursor: not-allowed; }
+@media (max-width: 580px) { .wizard-step { flex: 1 1 130px; } .wizard-footer { align-items: stretch; }
+  .wizard-footer .form-actions { width: 100%; } .wizard-footer button { flex: 1; } }

@@ -13,6 +13,8 @@ export function OverviewPage({ t }: { t: Labels }) {
             { path: "/journals", name: t.journals, detail: t.journalsDetail, number: "02" },
             { path: "/organization", name: t.organization, detail: t.companyAdminPreview, number: "03" },
             { path: "/periods", name: t.periods, detail: t.fiscalPreviewDescription, number: "04" },
+            { path: "/onboarding", name: t.onboarding, detail: t.onboardingDetail, number: "05" },
+            { path: "/access", name: t.access, detail: t.accessDetail, number: "06" },
           ].map((item) => (
             <NavLink className="quick-card" key={item.path} to={item.path}>
               <span className="quick-number">{item.number}</span>

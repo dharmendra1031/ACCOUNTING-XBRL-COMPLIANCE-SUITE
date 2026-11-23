@@ -63,3 +63,16 @@ remaining finance/security/UX decisions.
 - `/periods` — SCR-023 Fiscal Years/Periods **design preview** for intended Admin/Finance audience.
 - Both use shared existing form styles and read-only generated-on-save ID field first, with local Reset only. No Save/Activate/Lock, backend data or role access control is implemented.
 - Five routes now have partial preview UI; none is approved for customer use.
+
+## Frontend-first design batch 2 — security and onboarding (SCR-021 / SCR-022)
+
+- `/onboarding`: 5 locally navigable setup steps, legal/fiscal fields, disconnected COA
+  and opening-balance states, activation gate; **no** save, resume, fiscal lock, import,
+  account data or activation APIs. Inputs exist only in the mounted page.
+- `/access`: Company-user empty state, proposed invite field layout, company/branch
+  scope and MFA not connected, empty approval matrix. Selecting a role does **not**
+  grant permissions or send invitations.
+- These are **design previews** for intended Company Admin / Admin audiences, not
+  authenticated or access-controlled screens; backend RBAC, role scope and maker-checker
+  signoff are pending. The combined frontend now has 7 preview routes from 38 screen
+  specifications, with 0 screens independently accepted via browser UX sign-off.

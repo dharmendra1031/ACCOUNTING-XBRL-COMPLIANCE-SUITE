@@ -139,3 +139,20 @@ Build checks, bilingual tests and existing pre-code static contract checks are n
 - Forms allow local layout inspection and reset. Save/activate/deactivate/period lock and all financial actions remain absent because D-10/DEC-009/role scope/API and Finance approval are OPEN.
 - No fabricated company, account balance or fiscal-period rows were added. New page routes are accessible **design previews**, not permission-protected application screens.
 - Current application preview coverage: 5 of 38 catalogued screens have some draft UI; **zero** are signed-off, end-to-end tested accounting features. Browser 1366×768/320px/RTL/zoom/accessibility review pending.
+
+## 12. Frontend-first security/onboarding batch (23 November 2026)
+
+- Added SCR-021 onboarding preview at `/onboarding`: 5-step visual navigation, legal entity profile,
+  fiscal setup, disconnected company COA and opening-balance views, and explicitly blocked
+  activation. Preview step navigation does not persist a draft or claim resume capability.
+- Added SCR-022 users/roles/approval-matrix preview at `/access`: user form with technical
+  ID first, proposed role selection, unconnected company/branch scopes, MFA/approval limits,
+  empty real-user directory and empty policy table. No sample permission assignments,
+  invitation requests, real grants or policy writes.
+- Added 45 matched EN/AR labels and a small pure step-boundary test; no new dependencies
+  or redundant global shells were introduced.
+- Previous five previews plus two new previews make 7/38 screens with partial UI only.
+  **0/38 approved and browser-accepted**. Admin visibility is descriptive, not security.
+- Outstanding: confirm Company Admin/Auditor privileges, tenant/branch constraints, SoD,
+  onboarding conditional requirements, official regulator profile, activation gate and
+  real 1366×768/mobile/RTL/200%-zoom evidence before product sign-off.
