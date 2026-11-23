@@ -156,3 +156,23 @@ Build checks, bilingual tests and existing pre-code static contract checks are n
 - Outstanding: confirm Company Admin/Auditor privileges, tenant/branch constraints, SoD,
   onboarding conditional requirements, official regulator profile, activation gate and
   real 1366×768/mobile/RTL/200%-zoom evidence before product sign-off.
+
+## 13. SCR-001 auth and role-oriented navigation design preview (23 November 2026)
+
+- `/sign-in` shows independently reviewable Sign in, MFA and Recovery layouts
+  *outside* the accounting AppShell: no company-context selector, tenant information
+  or misleading session status on the auth screen.
+- Because identity/OIDC-vs-local-password, MFA, lockout and recovery rules are
+  unresolved, all credential/OTP fields and actions are disabled. No secrets
+  are collected and no API/provider is called.
+- Refactored React Router to an explicit auth-only route plus one layout route
+  (existing shell), avoiding a second global shell or login inside the company workspace.
+- `/access` now includes an illustrative role-to-workspace navigation preview
+  tied to the existing proposed-role select; all links are to implemented preview
+  routes. This is NEVER authorization enforcement or a representation of granted
+  roles. Audit/XBRL candidates show an honest no-preview state.
+- Added English/Arabic labels and pure role-map tests. Frontend preview coverage
+  becomes 8 of 38 catalogued screen IDs, with **0 full UX approvals**.
+- Remaining P0: owner-approved identity provider, authentication/MFA/recovery
+  contracts, tenant/branch role grants and backend security checks. Remaining UX:
+  real browser keyboard, mobile, RTL and 200% zoom evidence.

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { AppShell } from "./AppShell";
 import { AppRoutes } from "./routes";
 import { translations, type Language } from "../shared/i18n/translations";
 
@@ -13,12 +12,10 @@ export function App() {
   }, [language]);
 
   return (
-    <AppShell
+    <AppRoutes
       t={t}
       language={language}
-      onLanguageChange={() => setLanguage((current) => (current === "en" ? "ar" : "en"))}
-    >
-      <AppRoutes t={t} />
-    </AppShell>
+      onLanguageChange={() => setLanguage((current) => current === "en" ? "ar" : "en")}
+    />
   );
 }

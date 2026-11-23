@@ -76,3 +76,17 @@ remaining finance/security/UX decisions.
   authenticated or access-controlled screens; backend RBAC, role scope and maker-checker
   signoff are pending. The combined frontend now has 7 preview routes from 38 screen
   specifications, with 0 screens independently accepted via browser UX sign-off.
+
+## Frontend design batch 3 — SCR-001 sign-in and role previews
+
+- `/sign-in`: standalone sign-in, MFA and recovery design states; no company shell
+  or tenant data shown. Inputs and actions are deliberately **disabled** until
+  the external IdP vs local-auth, MFA/recovery and security decisions are approved.
+  No password form, credential transmission, session or bypass route is present.
+- `/access`: proposed role picker also shows illustrative links to already
+  existing preview workspaces. It never hides routes, assigns permissions or
+  applies server-side access control. XBRL/Auditor roles have no fake routes.
+- Route hierarchy uses a single shared AppShell for non-auth preview pages;
+  authentication is outside that layout.
+- Current UI coverage: 8 of 38 spec screen IDs have at least a partial preview;
+  **0/38 are product-approved and browser-accepted**.

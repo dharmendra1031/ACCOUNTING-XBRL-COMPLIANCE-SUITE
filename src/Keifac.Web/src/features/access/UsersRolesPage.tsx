@@ -1,8 +1,21 @@
+import { useState } from "react";
+import { NavLink } from "react-router";
 import { EmptyState, PageHeading, Surface } from "../../components/ui/PreviewElements";
 import { RecordIdField } from "../../components/ui/RecordIdField";
 import type { Labels } from "../../shared/i18n/translations";
+import { isPreviewRole, rolePreviewRoutes, type PreviewRole } from "./rolePreviewRoutes";
 
 export function UsersRolesPage({ t }: { t: Labels }) {
+  const [selectedRole, setSelectedRole] = useState<PreviewRole | "">("");
+  const workspaceLabels: Record<string, string> = {
+    "/organization": t.organization,
+    "/onboarding": t.onboarding,
+    "/access": t.access,
+    "/periods": t.periods,
+    "/accounts": t.accounts,
+    "/journals": t.journals,
+  };
+
   return (
     <>
       <PageHeading title={t.access} subtitle={t.accessDetail} preview={t.preview} />
@@ -12,7 +25,8 @@ export function UsersRolesPage({ t }: { t: Labels }) {
           <EmptyState title={t.empty} description={t.userDirectoryEmpty} />
         </Surface>
         <Surface title={t.invitePreview}>
-          <form className="preview-form" onSubmit={(event) => event.preventDefault()}>
+          <form className="preview-form" onSubmit={(event) => event.preventDefault()}
+            onReset={() => setSelectedRole("")}>
             <div className="form-grid">
               <RecordIdField t={t} />
               <div className="form-field">
@@ -21,7 +35,11 @@ export function UsersRolesPage({ t }: { t: Labels }) {
               </div>
               <div className="form-field">
                 <label htmlFor="access-role">{t.roleName}</label>
-                <select id="access-role" name="role" defaultValue="">
+                <select id="access-role" name="role" value={selectedRole}
+                  onChange={(event) => {
+                    const value = event.currentTarget.value;
+                    setSelectedRole(isPreviewRole(value) ? value : "");
+                  }}>
                   <option value="">{t.roleUnassigned}</option>
                   <option value="companyAdmin">{t.roleAdmin}</option>
                   <option value="accountant">{t.roleAccountant}</option>
@@ -63,6 +81,22 @@ export function UsersRolesPage({ t }: { t: Labels }) {
             <tbody><tr><td colSpan={5}><EmptyState title={t.empty} description={t.matrixEmpty} /></td></tr></tbody>
           </table>
         </div>
+      </Surface>
+      <Surface title={t.roleNavigationPreview}>
+        <p className="muted section-note">{t.roleNavigationDisclaimer}</p>
+        {!selectedRole ? (
+          <p className="muted">{t.roleNavigationSelect}</p>
+        ) : rolePreviewRoutes[selectedRole].length === 0 ? (
+          <p className="muted">{t.roleNavigationNone}</p>
+        ) : (
+          <nav className="role-preview-links" aria-label={t.roleNavigationPreview}>
+            {rolePreviewRoutes[selectedRole].map((path) => (
+              <NavLink className="role-preview-link" to={path} key={path}>
+                {workspaceLabels[path]}
+              </NavLink>
+            ))}
+          </nav>
+        )}
       </Surface>
     </>
   );
