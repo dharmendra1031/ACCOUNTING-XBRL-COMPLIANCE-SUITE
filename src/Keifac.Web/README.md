@@ -43,3 +43,13 @@ production frontend. Backend remains in `../Keifac.Api`.
 
 Read `docs/implementation/PHASE-1-IMPLEMENTATION-AUDIT.md` for
 remaining finance/security/UX decisions.
+
+## Design-preview interactions
+
+- Use the keyboard skip link to move to the main workspace.
+- The account form can check required fields and reset locally. These actions do
+  **not** create, save, post or transmit financial records.
+- No live identity, tenant authorization, API or database exists yet.
+- Browser visual/RTL/200%-zoom review remains pending.
+- npm lockfile generation is blocked by GitHub Actions infrastructure checks that
+  failed before any job step started. Do not invent lockfile or claim `npm ci` passed.

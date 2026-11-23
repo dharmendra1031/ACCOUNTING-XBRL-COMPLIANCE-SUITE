@@ -82,3 +82,22 @@ Scope: latest development source reviewed against the user-owned working SRS (es
 | 58 reports, XBRL and operations | Specification only | No financial/reporting or regulatory completion claims until report-level formulas and official evidence are approved. |
 
 Build checks, bilingual tests and existing pre-code static contract checks are necessary but not sufficient for signed UX, accounting, security, or database acceptance. No new architectural layer or dependency added by this iteration.
+
+## 8. Subsequent engineering work and CI infrastructure blocker (23 November 2026)
+
+- Audited current source and confirmed all feature modules are still preview-only.
+- Added a bilingual keyboard skip link and a local required-fields check for
+  the COA preview. Both keep financial commands disabled and require no new packages.
+- A one-time lockfile bootstrap attempt was made using the GitHub-hosted runner
+  because the working environment could not reach the npm registry.
+- On the bootstrap commit, GitHub Actions marked both the lockfile job and all
+  backend/frontend/contract jobs failed with **zero executed steps**. Logs were
+  unavailable at the time of inspection. Treat this as an external CI-runner
+  blocker of **unknown root cause**, not as failed source tests or passing tests.
+- No lockfile was generated or committed, and `npm ci` remains unverified.
+  The temporary bootstrap workflow is removed; regular CI permissions remain read-only.
+- The last previously verified successful CI run was on
+  `f15034653d44dea155643bdff2c7562465767bae`.
+- Next infrastructure gate: diagnose GitHub Actions runner/account availability;
+  then generate and review a real npm lockfile, change regular CI to `npm ci`,
+  and execute browser/RTL/mobile acceptance checks.

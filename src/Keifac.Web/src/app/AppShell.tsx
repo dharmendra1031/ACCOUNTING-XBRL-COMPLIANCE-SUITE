@@ -12,6 +12,7 @@ type Props = {
 export function AppShell({ t, language, onLanguageChange, children }: Props) {
   return (
     <div className="app-layout" dir={language === "ar" ? "rtl" : "ltr"}>
+      <a className="skip-link" href="#main-content">{t.skipToContent}</a>
       <aside className="sidebar">
         <div className="brand"><span className="brand-mark">K</span><strong>{t.brand}</strong></div>
         <div className="nav-group">{t.section}</div>
@@ -39,7 +40,7 @@ export function AppShell({ t, language, onLanguageChange, children }: Props) {
             </button>
           </div>
         </header>
-        <main className="main-content">
+        <main id="main-content" className="main-content" tabIndex={-1}>
           <div className="preview-warning" role="status">{t.notice}</div>
           {children}
         </main>

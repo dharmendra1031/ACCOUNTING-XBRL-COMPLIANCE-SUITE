@@ -1,9 +1,25 @@
+import { useState, type FormEvent } from "react";
 import type { Labels } from "../../../shared/i18n/translations";
 import { RecordIdField } from "../../../components/ui/RecordIdField";
 
 export function AccountFormPreview({ t }: { t: Labels }) {
+  const [checked, setChecked] = useState<"idle" | "passed" | "missing">("idle");
+
+  function checkFields(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const requiredText = ["code", "name"];
+    const complete = requiredText.every((name) => String(form.get(name) ?? "").trim().length > 0);
+    setChecked(complete ? "passed" : "missing");
+  }
+
   return (
-    <form className="preview-form" onSubmit={(event) => event.preventDefault()}>
+    <form
+      className="preview-form"
+      onSubmit={checkFields}
+      onChange={() => setChecked("idle")}
+      onReset={() => setChecked("idle")}
+    >
       <div className="form-grid">
         <RecordIdField t={t} />
         <div className="form-field">
@@ -39,8 +55,13 @@ export function AccountFormPreview({ t }: { t: Labels }) {
         </div>
       </div>
       <div className="form-footer">
-        <p className="preview-note">{t.unsavedPreview}</p>
-        <button className="reset-button" type="reset">{t.clearPreview}</button>
+        <p className="preview-note" role="status" aria-live="polite">
+          {checked === "passed" ? t.previewChecked : checked === "missing" ? t.previewRequired : t.unsavedPreview}
+        </p>
+        <div className="form-actions">
+          <button className="check-button" type="submit">{t.checkFields}</button>
+          <button className="reset-button" type="reset">{t.clearPreview}</button>
+        </div>
       </div>
     </form>
   );
