@@ -16,12 +16,13 @@ export function JournalsPage({ t }: { t: Labels }) {
         </div>
       </Surface>
       <Surface title={t.journalLines}>
-        <div className="table-scroll">
+        <div className="table-scroll" role="region" aria-label={t.journalLines} tabIndex={0}>
           <table>
             <thead><tr><th>{t.account}</th><th className="amount">{t.debit}</th><th className="amount">{t.credit}</th></tr></thead>
-            <tbody><tr><td colSpan={3}><EmptyState title={t.empty} description={t.journalEmpty} /></td></tr></tbody>
+            <tbody />
           </table>
         </div>
+        <EmptyState title={t.empty} description={t.journalEmpty} />
         <div className="ledger-footer"><span>{t.difference}</span><strong>{t.noAmount}</strong></div>
       </Surface>
     </>

@@ -85,14 +85,15 @@ export function CompanyOnboardingPage({ t }: { t: Labels }) {
           <p className="muted wizard-hint">{t.coaHint}</p>
         </div>
         <div id="onboarding-opening" hidden={step !== 3}>
-          <div className="table-scroll">
+          <div className="table-scroll" role="region" aria-label={t.stepOpening} tabIndex={0}>
             <table className="preview-data-table">
               <thead>
                 <tr><th>{t.account}</th><th className="amount">{t.debit}</th><th className="amount">{t.credit}</th><th>{t.openingEvidence}</th></tr>
               </thead>
-              <tbody><tr><td colSpan={4}><EmptyState title={t.empty} description={t.openingBalanceHint} /></td></tr></tbody>
+              <tbody />
             </table>
           </div>
+          <EmptyState title={t.empty} description={t.openingBalanceHint} />
         </div>
         <div id="onboarding-review" hidden={step !== 4}>
           <p className="muted section-note">{t.activationBlocked}</p>

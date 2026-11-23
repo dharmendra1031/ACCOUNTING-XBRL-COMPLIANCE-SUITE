@@ -50,6 +50,20 @@ def wait_for_server(timeout: float = 35) -> None:
     raise RuntimeError("Vite preview server did not start")
 
 
+def assert_visible_empty_states_fit(page, route: str, mode: str) -> None:
+    # A horizontally scrollable table can clip its centered "No live records" copy
+    # while the document itself reports NO overflow. Regression-proof that UX defect.
+    width = page.evaluate("window.innerWidth")
+    for state in page.locator(".empty-state").all():
+        if not state.is_visible():
+            continue
+        rect = state.bounding_box()
+        assert rect is not None
+        assert rect["x"] >= -1 and rect["x"] + rect["width"] <= width + 1, (
+            f"{mode} {route}: empty state clipped by horizontal table scroll: {rect}"
+        )
+
+
 def inspect_page(page, route: str, mode: str) -> dict:
     heading = page.locator("main h1")
     assert heading.count() == 1, f"{mode} {route}: expected one page heading"
@@ -74,6 +88,7 @@ def inspect_page(page, route: str, mode: str) -> dict:
         "#main-content", "#auth-main"
     ), f"{mode} {route}: skip link target incorrect"
     assert page.locator('a[href="#main-content"], a[href="#auth-main"]').count() == 1
+    assert_visible_empty_states_fit(page, route, mode)
     if route == "/sign-in":
         assert page.locator(".sidebar").count() == 0, "Auth page leaks company shell"
         assert page.locator("#auth-identity").is_disabled(), "Auth form must remain disabled"
@@ -99,6 +114,23 @@ def verify_interactions(browser) -> None:
     assert page.locator(".wizard-step.current").count() == 1
     assert page.locator("#onboarding-fiscal").is_visible()
     assert page.locator("#onboarding-legal").is_hidden()
+
+    mobile = browser.new_page(viewport={"width": 320, "height": 720})
+    mobile.goto(URL + "/journals", wait_until="networkidle")
+    assert_visible_empty_states_fit(mobile, "/journals", "mobile-regression")
+    assert mobile.get_by_role("region", name="Debit and credit lines").count() == 1
+
+    mobile.goto(URL + "/access", wait_until="networkidle")
+    assert_visible_empty_states_fit(mobile, "/access", "mobile-regression")
+    assert mobile.get_by_role("region", name="Approval policy matrix").count() == 1
+
+    mobile.goto(URL + "/onboarding", wait_until="networkidle")
+    mobile.locator(".wizard-step").nth(3).click()
+    assert mobile.locator("#onboarding-opening").is_visible()
+    assert_visible_empty_states_fit(mobile, "/onboarding-opening", "mobile-regression")
+    mobile.screenshot(path=str(OUTPUT / "mobile320-onboarding-opening.png"),
+                      full_page=True, animations="disabled")
+    mobile.close()
 
     page.goto(URL + "/access", wait_until="networkidle")
     page.locator("#access-role").select_option("accountant")

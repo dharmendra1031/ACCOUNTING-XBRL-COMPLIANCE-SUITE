@@ -191,3 +191,20 @@ manual assessment.
 Do not call this gate passed until the corresponding Actions run has completed
 successfully and generated actual screenshots. Address detected layout failures
 before any screen receives design sign-off.
+
+## 15. Visual inspection fix: clipped mobile empty states (23 November 2026)
+
+After the first 32/32 browser smoke run passed, human inspection of actual
+320px screenshots exposed clipped `No live records` text inside horizontally
+scrollable Journal lines and Approval Matrix tables. This is a real P1 UI/UX
+defect that document-scrollWidth-only tests could not detect. The same DOM
+pattern existed in onboarding opening-balance preview, so it was fixed too.
+
+The table headers still scroll horizontally inside keyboard-focusable,
+named regions; the informative empty state now sits **outside** the scrolling
+table and remains fully readable at mobile widths. Regression assertions
+now check empty-state geometry plus all three cases, including navigating to
+step 4 of onboarding at 320px. No backend changes and no new dependencies.
+
+Browser acceptance is **not** complete just because machine checks pass;
+product/design-owner screenshot approval and real 200% zoom remain pending.

@@ -75,12 +75,13 @@ export function UsersRolesPage({ t }: { t: Labels }) {
       </div>
       <Surface title={t.permissionMatrix}>
         <p className="muted section-note">{t.roleSelectionNote}</p>
-        <div className="table-scroll">
+        <div className="table-scroll" role="region" aria-label={t.permissionMatrix} tabIndex={0}>
           <table className="preview-data-table">
             <thead><tr><th>{t.permissionAction}</th><th>{t.permissionRole}</th><th>{t.approvalLimit}</th><th>{t.mfaRequirement}</th><th>{t.permissionStatus}</th></tr></thead>
-            <tbody><tr><td colSpan={5}><EmptyState title={t.empty} description={t.matrixEmpty} /></td></tr></tbody>
+            <tbody />
           </table>
         </div>
+        <EmptyState title={t.empty} description={t.matrixEmpty} />
       </Surface>
       <Surface title={t.roleNavigationPreview}>
         <p className="muted section-note">{t.roleNavigationDisclaimer}</p>
