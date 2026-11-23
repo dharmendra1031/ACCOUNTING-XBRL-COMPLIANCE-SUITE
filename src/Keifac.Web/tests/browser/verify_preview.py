@@ -1,4 +1,4 @@
-"""Real Chromium smoke/visual evidence for the eight UNAUTHENTICATED design-preview routes.
+"""Real Chromium smoke/visual evidence for all 38 UNAUTHENTICATED design-preview routes.
 
 Run after: npm ci && npm run build
 Requires: python -m pip install playwright==1.56.0
@@ -8,7 +8,6 @@ No finance, security or browser visual *approval* is implied by passing.
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
 import subprocess
 import time
@@ -17,6 +16,10 @@ from urllib.request import urlopen
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
+CATALOG_MARKER = "export const screenCatalog: readonly CatalogScreen[] = "
+CATALOG_SOURCE = (ROOT / "src/features/catalog/screenCatalog.ts").read_text(encoding="utf-8")
+CATALOG_SCREENS = json.loads(CATALOG_SOURCE.split(CATALOG_MARKER, 1)[1].rsplit(";", 1)[0])
+CATALOG_ROUTES = tuple(screen["route"] for screen in CATALOG_SCREENS)
 OUTPUT = Path(__file__).resolve().parent / "artifacts"
 PORT = 4173
 URL = f"http://127.0.0.1:{PORT}"
@@ -29,7 +32,8 @@ ROUTES = (
     "/periods",
     "/onboarding",
     "/access",
-)
+) + CATALOG_ROUTES
+assert len(ROUTES) == 38 and len(set(ROUTES)) == 38, "All 38 SRS screens must have unique routes"
 SIZES = (
     ("desktop", 1366, 768, "en"),
     ("mobile320", 320, 720, "en"),
@@ -89,6 +93,11 @@ def inspect_page(page, route: str, mode: str) -> dict:
     ), f"{mode} {route}: skip link target incorrect"
     assert page.locator('a[href="#main-content"], a[href="#auth-main"]').count() == 1
     assert_visible_empty_states_fit(page, route, mode)
+    if route in CATALOG_ROUTES:
+        assert page.locator("[data-screen-id]").count() == 1, f"{mode} {route}: missing screen-specific layout"
+        assert page.locator(".catalog-actions button").count() >= 2
+        assert page.locator(".catalog-actions button:disabled").count() == page.locator(".catalog-actions button").count()
+        assert page.locator(".catalog-table tbody tr").count() == 0, "Never invent financial records"
     if route == "/sign-in":
         assert page.locator(".sidebar").count() == 0, "Auth page leaks company shell"
         assert page.locator("#auth-identity").is_disabled(), "Auth form must remain disabled"
@@ -140,6 +149,19 @@ def verify_interactions(browser) -> None:
                for i in range(links.count()))
     page.get_by_role("button", name="Reset fields").click()
     assert page.locator(".role-preview-links").count() == 0, "Role preview reset failed"
+
+    page.goto(URL + "/xbrl-package", wait_until="networkidle")
+    assert page.locator('[data-screen-id="SCR-016"]').count() == 1
+    assert page.locator(".catalog-actions button:disabled").count() == 4
+
+    page.goto(URL + "/filing-workspace", wait_until="networkidle")
+    page.locator(".catalog-wizard-nav button").nth(2).click()
+    assert page.locator(".catalog-step.active").count() == 1
+    assert page.locator(".catalog-form .form-field").count() == 1
+
+    page.goto(URL + "/access", wait_until="networkidle")
+    page.locator("#access-role").select_option("xbrlPreparer")
+    assert page.locator('.role-preview-links a[href="/xbrl-mapping"]').count() == 1
 
     page.goto(URL + "/accounts", wait_until="networkidle")
     page.get_by_role("button", name="Check required fields (preview)").click()
@@ -215,7 +237,7 @@ def main() -> None:
         json.dumps(report, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
-    print(f"PASS {len(cases)} Chromium route/viewport checks + 4 interaction flows")
+    print(f"PASS {len(cases)} Chromium route/viewport checks + preview interaction flows")
     print("Artifacts:", OUTPUT)
 
 

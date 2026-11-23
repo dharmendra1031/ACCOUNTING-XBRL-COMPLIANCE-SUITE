@@ -32,7 +32,7 @@ export function AppRoutes({ t, language, onLanguageChange }: Props) {
         <Route path="/organization" element={<CompanyAndBranchPage t={t} />} />
         <Route path="/periods" element={<FiscalPeriodsPage t={t} />} />
         <Route path="/onboarding" element={<CompanyOnboardingPage t={t} />} />
-        <Route path="/access" element={<UsersRolesPage t={t} />} />
+        <Route path="/access" element={<UsersRolesPage t={t} language={language} />} />
         {screenCatalog.map((screen) => (
           <Route
             key={screen.id}

@@ -208,3 +208,24 @@ step 4 of onboarding at 320px. No backend changes and no new dependencies.
 
 Browser acceptance is **not** complete just because machine checks pass;
 product/design-owner screenshot approval and real 200% zoom remain pending.
+
+## 16. All 38 catalogued screen UI previews — 23 November 2026
+
+- Added 30 distinct SRS-mapped bilingual typed screen design contracts, each
+  with audience, fields, table columns, actions and blocking business rules,
+  spanning sales, purchasing, inventory, banking, finance, regulatory, XBRL,
+  reports, audit and operations. Maintained the 8 existing preview components.
+- Exposed each of the 38 through a route and grouped sidebar navigation.
+  Collapsed mobile navigation prevents 38 links monopolizing narrow screens;
+  dashboard supplies a compact full-screen index.
+- Screen-specific forms and empty grids are renderable, locally editable where
+  appropriate and resettable. All source actions remain intentionally disabled.
+  No financial activity, regulator decision, record persistence, API calls or
+  tenant authorization is simulated.
+- Browser smoke matrix expanded to 38 routes × 4 viewports = 152 route/layout
+  checks plus focused wizard/role/COA interactions. Keep claim PENDING until
+  corresponding CI and artifacts confirm actual execution.
+- This is **38/38 routed UI preview coverage, NOT 38 completed screens**.
+  No screen is counted as DESIGN ACCEPTED without screenshot/UX-owner approval,
+  keyboard/screen-reader/true zoom evidence and relevant conditional schema,
+  permission and Finance/Security sign-off.

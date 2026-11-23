@@ -111,3 +111,23 @@ python tests/browser/verify_preview.py
 ```
 Automated screenshots and passing CI are **not** the same as independent human
 visual review, screen-reader review or owner UX acceptance.
+
+## Complete SRS navigation coverage — 38 preview routes
+
+All 38 canonical SRS screen IDs have navigable bilingual **frontend design
+previews**. Eight prior screens retain dedicated components; the other 30 use
+one typed screen-specific contract catalog and a small set of compact layout
+patterns. Every catalog entry has its own field labels, table columns, intended
+role, disabled source-workflow actions and validation/authorization gate.
+
+- Screen route metadata: `src/features/catalog/screenCatalog.ts`
+- Shared catalog renderer: `src/features/catalog/CatalogScreenPage.tsx`
+- Nine localized domain navigation groups: `src/features/catalog/screenGroups.ts`
+- Mobile uses an expandable module menu, avoiding 38 simultaneous header links.
+- Zero fake financial records, balances, approved filings, report results,
+  permission grants, company context or working Save/Post/Approve/Export buttons.
+- Entire catalog remains **preview-only**; no production-quality functionality
+  or final 38-screen UX acceptance is claimed.
+- Automated Chromium matrix covers all 38 routes on desktop, narrow mobile,
+  Arabic RTL and 200%-zoom-equivalent CSS width; final screenshots still
+  require human visual acceptance.

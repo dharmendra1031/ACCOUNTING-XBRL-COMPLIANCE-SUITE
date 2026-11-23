@@ -4,8 +4,10 @@ import { EmptyState, PageHeading, Surface } from "../../components/ui/PreviewEle
 import { RecordIdField } from "../../components/ui/RecordIdField";
 import type { Labels } from "../../shared/i18n/translations";
 import { isPreviewRole, rolePreviewRoutes, type PreviewRole } from "./rolePreviewRoutes";
+import { screenCatalog } from "../catalog/screenCatalog";
+import type { Language } from "../../shared/i18n/translations";
 
-export function UsersRolesPage({ t }: { t: Labels }) {
+export function UsersRolesPage({ t, language }: { t: Labels; language: Language }) {
   const [selectedRole, setSelectedRole] = useState<PreviewRole | "">("");
   const workspaceLabels: Record<string, string> = {
     "/organization": t.organization,
@@ -93,7 +95,7 @@ export function UsersRolesPage({ t }: { t: Labels }) {
           <nav className="role-preview-links" aria-label={t.roleNavigationPreview}>
             {rolePreviewRoutes[selectedRole].map((path) => (
               <NavLink className="role-preview-link" to={path} key={path}>
-                {workspaceLabels[path]}
+                {workspaceLabels[path] ?? screenCatalog.find((screen) => screen.route === path)?.title[language]}
               </NavLink>
             ))}
           </nav>
