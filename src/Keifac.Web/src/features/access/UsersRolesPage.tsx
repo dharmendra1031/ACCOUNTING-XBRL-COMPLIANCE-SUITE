@@ -89,8 +89,6 @@ export function UsersRolesPage({ t, language }: { t: Labels; language: Language 
         <p className="muted section-note">{t.roleNavigationDisclaimer}</p>
         {!selectedRole ? (
           <p className="muted">{t.roleNavigationSelect}</p>
-        ) : rolePreviewRoutes[selectedRole].length === 0 ? (
-          <p className="muted">{t.roleNavigationNone}</p>
         ) : (
           <nav className="role-preview-links" aria-label={t.roleNavigationPreview}>
             {rolePreviewRoutes[selectedRole].map((path) => (
