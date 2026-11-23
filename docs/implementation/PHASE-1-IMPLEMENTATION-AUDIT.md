@@ -131,3 +131,11 @@ Build checks, bilingual tests and existing pre-code static contract checks are n
   now uses `npm ci` rather than a mutable `npm install`.
 - These checks prove dependency reproducibility and compilation on the runner,
   **not** UI browser acceptance or accounting correctness.
+
+## 11. Frontend-first draft screen batch — 23 November 2026
+
+- Added connected navigation and compact bilingual **design previews** for SCR-003 Company/Branch and SCR-023 Fiscal Years/Periods, informed by SRS Appendix E and R2-04.
+- Distinct company, branch and fiscal record fields put the read-only auto-generated-on-save technical ID first as required by SRS Appendix K. The fields are *not* persisted or reserved.
+- Forms allow local layout inspection and reset. Save/activate/deactivate/period lock and all financial actions remain absent because D-10/DEC-009/role scope/API and Finance approval are OPEN.
+- No fabricated company, account balance or fiscal-period rows were added. New page routes are accessible **design previews**, not permission-protected application screens.
+- Current application preview coverage: 5 of 38 catalogued screens have some draft UI; **zero** are signed-off, end-to-end tested accounting features. Browser 1366×768/320px/RTL/zoom/accessibility review pending.

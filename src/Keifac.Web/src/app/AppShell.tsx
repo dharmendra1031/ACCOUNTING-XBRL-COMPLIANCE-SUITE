@@ -21,6 +21,8 @@ export function AppShell({ t, language, onLanguageChange, children }: Props) {
             { path: "/", label: t.overview, number: "01" },
             { path: "/accounts", label: t.accounts, number: "02" },
             { path: "/journals", label: t.journals, number: "03" },
+            { path: "/organization", label: t.organization, number: "04" },
+            { path: "/periods", label: t.periods, number: "05" },
           ].map((item) => (
             <NavLink end key={item.path} to={item.path} className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
               <span className="nav-number" aria-hidden="true">{item.number}</span>{item.label}

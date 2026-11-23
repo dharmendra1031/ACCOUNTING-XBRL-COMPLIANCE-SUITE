@@ -56,3 +56,10 @@ remaining finance/security/UX decisions.
 - Lockfile generation, clean `npm ci`, preview tests and frontend build passed
   in the one-time dependency bootstrap job on 23 November 2026.
   Customer-facing authentication and accounting APIs remain blocked.
+
+## Frontend-first screen batch
+
+- `/organization` — SCR-003 Company/Branch **design preview** for intended Company Admin audience.
+- `/periods` — SCR-023 Fiscal Years/Periods **design preview** for intended Admin/Finance audience.
+- Both use shared existing form styles and read-only generated-on-save ID field first, with local Reset only. No Save/Activate/Lock, backend data or role access control is implemented.
+- Five routes now have partial preview UI; none is approved for customer use.

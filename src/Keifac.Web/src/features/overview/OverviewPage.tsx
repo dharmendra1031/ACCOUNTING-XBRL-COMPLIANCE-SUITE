@@ -11,6 +11,8 @@ export function OverviewPage({ t }: { t: Labels }) {
           {[
             { path: "/accounts", name: t.accounts, detail: t.accountsDetail, number: "01" },
             { path: "/journals", name: t.journals, detail: t.journalsDetail, number: "02" },
+            { path: "/organization", name: t.organization, detail: t.companyAdminPreview, number: "03" },
+            { path: "/periods", name: t.periods, detail: t.fiscalPreviewDescription, number: "04" },
           ].map((item) => (
             <NavLink className="quick-card" key={item.path} to={item.path}>
               <span className="quick-number">{item.number}</span>
