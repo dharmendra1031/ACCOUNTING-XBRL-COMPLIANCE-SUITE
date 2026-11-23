@@ -345,3 +345,6 @@ td { padding: 0; border-bottom: 1px solid #e9edf2; }
   .catalog-actions { width: 100%; }
   .catalog-actions button { flex: 1 1 130px; }
 }
+
+/* Mobile screen-directory navigation does not repeat the desktop foundation footer. */
+@media (max-width: 820px) { .sidebar-footer { display: none; } }
