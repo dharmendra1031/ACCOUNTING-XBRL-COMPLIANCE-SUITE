@@ -36,7 +36,8 @@ jobs:
 
   web-build:
     name: Frontend preview typecheck and build
-    runs-on: ubuntu-latest
+    # Playwright 1.56 needs a supported Linux host; ubuntu-latest moved to 26.04.
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: src/Keifac.Web
