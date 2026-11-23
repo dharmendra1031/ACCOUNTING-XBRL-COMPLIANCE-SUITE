@@ -8,12 +8,12 @@ financial records, database access or Save/Post actions. Do not deploy to custom
 
 Node.js 22.12+ and npm are required.
 
-1. Run `npm install` in `src/Keifac.Web`.
+1. Run `npm ci` in `src/Keifac.Web`.
 2. Run `npm run dev` to preview the UI.
 3. Run `npm test`, `npm run check` and `npm run build` for validation.
 
-Direct dependencies are pinned. Commit a verified `package-lock.json` and
-switch CI to `npm ci` before a customer-facing release.
+Direct dependency versions are pinned and the verified `package-lock.json`
+is committed. CI uses `npm ci` so every build gets the same dependency resolution.
 
 ## Source layout
 
@@ -53,5 +53,6 @@ remaining finance/security/UX decisions.
   **not** create, save, post or transmit financial records.
 - No live identity, tenant authorization, API or database exists yet.
 - Browser visual/RTL/200%-zoom review remains pending.
-- npm lockfile generation is blocked by GitHub Actions infrastructure checks that
-  failed before any job step started. Do not invent lockfile or claim `npm ci` passed.
+- Lockfile generation, clean `npm ci`, preview tests and frontend build passed
+  in the one-time dependency bootstrap job on 23 November 2026.
+  Customer-facing authentication and accounting APIs remain blocked.

@@ -117,3 +117,17 @@ Build checks, bilingual tests and existing pre-code static contract checks are n
 - GitHub Actions remains failed before steps are executed; check runner provisioning,
   account billing/Actions quotas and run-level annotations independently. Do not
   fabricate a passing CI status or npm lockfile.
+
+## 10. Dependency reproducibility proof (23 November 2026)
+
+- GitHub-hosted runners recovered: run `45120802615` (commit `d1bce96`)
+  executed all three jobs successfully (API build, frontend tests/build, static
+  contract checks). Earlier no-step failures were transient but their exact
+  upstream cause was not proven.
+- One-time lockfile job `45120879750` resolved pinned dependencies from npm,
+  successfully completed clean `npm ci`, frontend tests and production build,
+  then committed a real lockfile under `src/Keifac.Web/package-lock.json`.
+- Removed the temporary lockfile workflow after generation. Regular frontend CI
+  now uses `npm ci` rather than a mutable `npm install`.
+- These checks prove dependency reproducibility and compilation on the runner,
+  **not** UI browser acceptance or accounting correctness.
