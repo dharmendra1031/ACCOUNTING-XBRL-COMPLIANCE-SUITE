@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { NavLink } from "react-router";
 import { EmptyState, PageHeading, Surface } from "../../components/ui/PreviewElements";
 import { RecordIdField } from "../../components/ui/RecordIdField";
 import type { Labels, Language } from "../../shared/i18n/translations";
@@ -107,7 +106,6 @@ export function CatalogScreenPage({ screen, t, language }: Props) {
       <div className="catalog-meta">
         <span className="catalog-screen-number">{screen.id}</span>
         <span>{t.catalogAudience}: {localized(screen.audience, language)}</span>
-        <span>{t.catalogNotConnected}</span>
       </div>
       <div className={type === "master" || type === "review" || type === "approval"
         ? "catalog-content catalog-two-panels" : "catalog-content"}>
@@ -129,11 +127,6 @@ export function CatalogScreenPage({ screen, t, language }: Props) {
           ))}
         </div>
       </div>
-      <p className="catalog-preview-footer">
-        {t.catalogNoProcessing}
-        {" · "}
-        <NavLink to="/" className="auth-demo-link">{t.overview}</NavLink>
-      </p>
     </div>
   );
 }

@@ -348,3 +348,9 @@ td { padding: 0; border-bottom: 1px solid #e9edf2; }
 
 /* Mobile screen-directory navigation does not repeat the desktop foundation footer. */
 @media (max-width: 820px) { .sidebar-footer { display: none; } }
+
+/* Screenshot-review fixes: 3-digit screen IDs must never wrap. */
+.nav-number { flex: 0 0 28px; white-space: nowrap; width: 28px; }
+.nav-section-links .nav-number { flex-basis: 28px; }
+.catalog-page .empty-state { min-height: 126px; padding-block: 19px; }
+.catalog-page .empty-symbol { margin-bottom: 0; }

@@ -9,7 +9,7 @@ export function OverviewPage({ t, language }: { t: Labels; language: Language })
     { path: "/accounts", name: t.accounts, detail: t.accountsDetail, number: "004" },
     { path: "/journals", name: t.journals, detail: t.journalsDetail, number: "005" },
     { path: "/onboarding", name: t.onboarding, detail: t.onboardingDetail, number: "021" },
-    { path: "/reports", name: language === "en" ? "Report centre" : "مركز التقارير", detail: t.catalogNoProcessing, number: "020" },
+    { path: "/reports", name: language === "en" ? "Report centre" : "مركز التقارير", detail: language === "en" ? "Company-scoped financial reporting workspace" : "مساحة تقارير مالية ضمن نطاق الشركة", number: "020" },
   ];
 
   return (
@@ -28,7 +28,6 @@ export function OverviewPage({ t, language }: { t: Labels; language: Language })
         </div>
       </Surface>
       <Surface title={t.catalogIndex}>
-        <p className="muted section-note">{t.catalogIndexHint}</p>
         <div className="catalog-directory">
           {screenGroups.map((group) => {
             const items = screenCatalog.filter((screen) => screen.group === group.key);
