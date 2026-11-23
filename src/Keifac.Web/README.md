@@ -1,6 +1,6 @@
 # KEIFAC web UI — development preview
 
-Read-only React + TypeScript + Vite + Tailwind frontend foundation.
+Design-preview React + TypeScript + Vite + Tailwind frontend foundation.
 This is not an authenticated or connected accounting application; no live
 financial records, database access or Save/Post actions. Do not deploy to customers.
 

@@ -149,7 +149,7 @@ Build checks, bilingual tests and existing pre-code static contract checks are n
   ID first, proposed role selection, unconnected company/branch scopes, MFA/approval limits,
   empty real-user directory and empty policy table. No sample permission assignments,
   invitation requests, real grants or policy writes.
-- Added 45 matched EN/AR labels and a small pure step-boundary test; no new dependencies
+- Added 50 actively-used EN/AR labels and a small pure step-boundary test; no new dependencies
   or redundant global shells were introduced.
 - Previous five previews plus two new previews make 7/38 screens with partial UI only.
   **0/38 approved and browser-accepted**. Admin visibility is descriptive, not security.
