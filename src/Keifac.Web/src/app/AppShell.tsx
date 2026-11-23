@@ -60,7 +60,7 @@ export function AppShell({ t, language, onLanguageChange, children }: Props) {
           </NavLink>
           {groups.map((group) => (
             <details className="nav-section" key={group.id}
-              defaultOpen={group.items.some((item) => item.path === location.pathname)}>
+              open={group.items.some((item) => item.path === location.pathname) || undefined}>
               <summary>{group.label}<span className="nav-section-count">{group.items.length}</span></summary>
               <div className="nav-section-links">
                 {group.items.map((item) => (
