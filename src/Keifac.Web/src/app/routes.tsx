@@ -8,6 +8,8 @@ import { CompanyAndBranchPage } from "../features/organization/CompanyAndBranchP
 import { FiscalPeriodsPage } from "../features/organization/FiscalPeriodsPage";
 import { CompanyOnboardingPage } from "../features/onboarding/CompanyOnboardingPage";
 import { UsersRolesPage } from "../features/access/UsersRolesPage";
+import { CatalogScreenPage } from "../features/catalog/CatalogScreenPage";
+import { screenCatalog } from "../features/catalog/screenCatalog";
 import type { Labels, Language } from "../shared/i18n/translations";
 
 type Props = { t: Labels; language: Language; onLanguageChange: () => void };
@@ -24,13 +26,20 @@ export function AppRoutes({ t, language, onLanguageChange }: Props) {
           <Outlet />
         </AppShell>
       }>
-        <Route path="/" element={<OverviewPage t={t} />} />
+        <Route path="/" element={<OverviewPage t={t} language={language} />} />
         <Route path="/accounts" element={<AccountsPage t={t} />} />
         <Route path="/journals" element={<JournalsPage t={t} />} />
         <Route path="/organization" element={<CompanyAndBranchPage t={t} />} />
         <Route path="/periods" element={<FiscalPeriodsPage t={t} />} />
         <Route path="/onboarding" element={<CompanyOnboardingPage t={t} />} />
         <Route path="/access" element={<UsersRolesPage t={t} />} />
+        {screenCatalog.map((screen) => (
+          <Route
+            key={screen.id}
+            path={screen.route}
+            element={<CatalogScreenPage screen={screen} t={t} language={language} />}
+          />
+        ))}
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
