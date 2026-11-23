@@ -30,6 +30,9 @@ jobs:
       - name: Build API (release)
         run: dotnet build src/Keifac.Api/Keifac.Api.csproj --configuration Release
 
+      - name: Verify anonymous API boundary (no financial endpoints exposed)
+        run: python3 tests/api/verify_api_boundary.py
+
       - name: Check pull request patch whitespace
         if: github.event_name == 'pull_request'
         run: git diff --check "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}"

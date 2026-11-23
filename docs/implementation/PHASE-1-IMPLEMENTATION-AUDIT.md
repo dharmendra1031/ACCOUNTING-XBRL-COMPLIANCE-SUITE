@@ -229,3 +229,18 @@ product/design-owner screenshot approval and real 200% zoom remain pending.
   No screen is counted as DESIGN ACCEPTED without screenshot/UX-owner approval,
   keyboard/screen-reader/true zoom evidence and relevant conditional schema,
   permission and Finance/Security sign-off.
+
+## 11. Backend perimeter smoke gate while decisions remain open (23 November 2026)
+
+- The API currently exposes only ASP.NET Core `/health`; no production login,
+  membership, SQL migration, company records, COA CRUD or journal commands exist.
+- A standard-library HTTP smoke test at `tests/api/verify_api_boundary.py`
+  starts the **built Release API in Production environment**, checks anonymous
+  health readiness, then requires 401/403/404 for each candidate financial route
+  with both no credentials and forged Authorization/tenant/company headers.
+- CI invokes this smoke check after .NET compilation. This intentionally fails
+  if a business API becomes anonymously reachable; it is not a fake auth service.
+- **Important test limitation:** 404 because a route does not exist is NOT proof
+  of tenant authorization or RBAC. Add real valid/expired/revoked-token and
+  cross-company fixtures after GAP-07/08, D-10 and DEC-009 are approved.
+  Do not create SQL migrations or account writes on the strength of this test.
