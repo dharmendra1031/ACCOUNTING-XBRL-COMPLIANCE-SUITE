@@ -31,6 +31,7 @@ src/
 │   └── accounting/
 │       ├── accounts/AccountsPage.tsx
 │       ├── accounts/AccountFormPreview.tsx
+│       ├── accounts/accountPreviewValidation.ts
 │       └── journals/JournalsPage.tsx
 ├── shared/i18n/translations.ts # EN/AR labels
 ├── styles/globals.css          # Shared design/layout styles
@@ -47,7 +48,8 @@ remaining finance/security/UX decisions.
 ## Design-preview interactions
 
 - Use the keyboard skip link to move to the main workspace.
-- The account form can check required fields and reset locally. These actions do
+- The account form checks all four required fields, focuses the first incomplete
+  field and can reset locally. These actions do
   **not** create, save, post or transmit financial records.
 - No live identity, tenant authorization, API or database exists yet.
 - Browser visual/RTL/200%-zoom review remains pending.

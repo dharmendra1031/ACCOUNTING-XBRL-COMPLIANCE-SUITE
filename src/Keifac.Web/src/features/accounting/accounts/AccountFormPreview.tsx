@@ -1,21 +1,26 @@
 import { useState, type FormEvent } from "react";
 import type { Labels } from "../../../shared/i18n/translations";
 import { RecordIdField } from "../../../components/ui/RecordIdField";
+import { firstMissingAccountField } from "./accountPreviewValidation";
 
 export function AccountFormPreview({ t }: { t: Labels }) {
   const [checked, setChecked] = useState<"idle" | "passed" | "missing">("idle");
 
   function checkFields(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const requiredText = ["code", "name"];
-    const complete = requiredText.every((name) => String(form.get(name) ?? "").trim().length > 0);
-    setChecked(complete ? "passed" : "missing");
+    const missing = firstMissingAccountField(new FormData(event.currentTarget));
+    setChecked(missing ? "missing" : "passed");
+
+    if (missing) {
+      const field = event.currentTarget.elements.namedItem(missing);
+      if (field instanceof HTMLElement) field.focus();
+    }
   }
 
   return (
     <form
       className="preview-form"
+      noValidate
       onSubmit={checkFields}
       onChange={() => setChecked("idle")}
       onReset={() => setChecked("idle")}

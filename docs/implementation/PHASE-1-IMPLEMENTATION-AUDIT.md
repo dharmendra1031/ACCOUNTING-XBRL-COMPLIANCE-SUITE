@@ -101,3 +101,19 @@ Build checks, bilingual tests and existing pre-code static contract checks are n
 - Next infrastructure gate: diagnose GitHub Actions runner/account availability;
   then generate and review a real npm lockfile, change regular CI to `npm ci`,
   and execute browser/RTL/mobile acceptance checks.
+
+## 9. Preview validation bug fix and local proof (23 November 2026)
+
+- Previous UI validation checked only account code and English name even though type
+  and normal balance were marked required; browser native validation also prevented
+  the custom submit handler from showing its intended message on missing fields.
+- Added a focused `firstMissingAccountField` helper for the four existing required
+  form controls, with `noValidate` to make the review flow deterministic.
+- On an incomplete preview, focus moves to the first missing field and the result
+  is announced in the form's status region. No data is persisted.
+- Four Node built-in tests (missing, whitespace, complete and non-text inputs)
+  and isolated TypeScript compilation were executed locally and passed.
+  This does **not** constitute a full React build, browser acceptance or security test.
+- GitHub Actions remains failed before steps are executed; check runner provisioning,
+  account billing/Actions quotas and run-level annotations independently. Do not
+  fabricate a passing CI status or npm lockfile.
