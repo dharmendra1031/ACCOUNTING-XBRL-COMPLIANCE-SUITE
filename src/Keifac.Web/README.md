@@ -90,3 +90,24 @@ remaining finance/security/UX decisions.
   authentication is outside that layout.
 - Current UI coverage: 8 of 38 spec screen IDs have at least a partial preview;
   **0/38 are product-approved and browser-accepted**.
+
+## Chromium browser QA
+
+The existing locked frontend dependencies remain unchanged. GitHub Actions runs
+a pinned Python Playwright runner against the built Vite preview and uploads
+`keifac-frontend-browser-qa` screenshots + JSON report. It inspects all eight
+preview routes at 1366×768, 320×720 and 375×812 Arabic RTL viewports, plus
+683×384 as a 200%-zoom **layout-equivalent viewport** (not an actual browser
+Ctrl+Plus zoom test). It asserts no document-level horizontal overflow, visible
+headings, skip-link presence and auth-shell separation, plus local onboarding,
+role-preview and COA validation interactions. No real tenant or financial data
+is exercised.
+
+Local reproduction after `npm ci && npm run build`:
+```bash
+python -m pip install playwright==1.56.0
+python -m playwright install chromium
+python tests/browser/verify_preview.py
+```
+Automated screenshots and passing CI are **not** the same as independent human
+visual review, screen-reader review or owner UX acceptance.

@@ -176,3 +176,18 @@ Build checks, bilingual tests and existing pre-code static contract checks are n
 - Remaining P0: owner-approved identity provider, authentication/MFA/recovery
   contracts, tenant/branch role grants and backend security checks. Remaining UX:
   real browser keyboard, mobile, RTL and 200% zoom evidence.
+
+## 14. Real-browser visual smoke gate (23 November 2026)
+
+Added a pinned Chromium/Playwright smoke runner to the existing frontend CI job.
+Covers 8 routes × desktop 1366×768, 320px mobile, 375px Arabic RTL and 683px
+zoom-equivalent CSS viewport, with screenshot artifact and machine-readable
+report; also checks local form/role/wizard interactions and no unauthorized
+sign-in action. It does NOT assert authenticated access or financial processing.
+The 683px viewport represents 1366px at 200% zoom for layout purposes only;
+real browser zoom and visual/keyboard/screen-reader owner acceptance require
+manual assessment.
+
+Do not call this gate passed until the corresponding Actions run has completed
+successfully and generated actual screenshots. Address detected layout failures
+before any screen receives design sign-off.

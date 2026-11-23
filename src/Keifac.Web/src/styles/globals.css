@@ -273,3 +273,11 @@ td { padding: 0; border-bottom: 1px solid #e9edf2; }
   .auth-security-note { margin-top: 13px; }
   .auth-panel { padding: 17px; }
 }
+
+/* Mobile and narrow-viewport hardening for long bilingual company context. */
+.topbar-actions { min-width: 0; }
+.context-chip { min-width: 0; overflow-wrap: anywhere; }
+.lang-button { flex-shrink: 0; white-space: nowrap; }
+@media (max-width: 580px) {
+  .topbar-actions { flex-wrap: wrap; }
+}
